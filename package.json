@@ -171,8 +171,8 @@
         "webpack-merge": "^5.9.0"
     },
     "build": {
-        "productName": "ElectronReact",
-        "appId": "org.erb.ElectronReact",
+        "productName": "RememberIt",
+        "appId": "com.yogeshhrathod.RememberIt",
         "asar": true,
         "asarUnpack": "**\\*.{node,dll}",
         "files": [

@@ -5,7 +5,7 @@
   "license": "MIT",
   "author": {
     "name": "Electron React Boilerplate Maintainers",
-    "email": "electronreactboilerplate@gmail.com",
+    "email": "yogeshhrathod@gmail.com",
     "url": "https://github.com/yogeshhrathod"
   },
   "main": "./dist/main/main.js",

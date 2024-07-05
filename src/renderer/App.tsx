@@ -1,14 +1,28 @@
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
-import icon from '../../assets/icon.svg';
 import './App.css';
 
 function Hello() {
   return (
     <div>
       <div className="Hello">
-        <img width="200" alt="icon" src={icon} />
+        <img
+          width="200"
+          alt="icon"
+          src="C:/Users/yrath/OneDrive/Pictures/R.jfif"
+        />
       </div>
-      <h1>Remember It Starter</h1>
+      <h1
+        onClick={() => {
+          console.log(
+            window.electron.ipcRenderer.sendMessage(
+              'open-file',
+              'C:/Users/yrath/OneDrive/Pictures/R.jfif',
+            ),
+          );
+        }}
+      >
+        Remember It Starter
+      </h1>
     </div>
   );
 }

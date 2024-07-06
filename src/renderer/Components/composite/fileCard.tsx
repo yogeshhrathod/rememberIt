@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { IFile } from 'src/schema';
 import {
   Card,
   CardHeader,
@@ -14,9 +15,9 @@ interface IFileCard {
   path: string;
   onClick: () => void;
 }
-function isImage(filePath: string): boolean {
+function isImage(path: string): boolean {
   // Extract file extension from the filePath
-  const extension = filePath.split('.').pop()?.toLowerCase();
+  const extension = path.split('.').pop()?.toLowerCase();
 
   // List of common image file extensions
   const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg'];

@@ -16,33 +16,19 @@ import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import handleMigrations from './Database/migrationRunner';
+import initAPI from './API';
 
 class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
     autoUpdater.logger = log;
     autoUpdater.checkForUpdatesAndNotify();
+    initAPI();
+    handleMigrations();
   }
 }
 
 let mainWindow: BrowserWindow | null = null;
-
-ipcMain.on('ipc-example', async (event, arg) => {
-  const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
-  console.log(msgTemplate(arg));
-  event.reply('ipc-example', msgTemplate('pong'));
-});
-
-ipcMain.on('open-file', async (event, arg) => {
-  shell.openPath(arg);
-  event.reply('open-file', 'Done');
-});
-
-ipcMain.on('file-dropped', (event, filePath: string) => {
-  console.log('File dropped:', filePath);
-  // Handle the file path as needed
-  event.reply('file-dropped', filePath);
-});
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -99,7 +85,6 @@ const createWindow = async () => {
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 
   mainWindow.on('ready-to-show', () => {
-    handleMigrations();
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
     }

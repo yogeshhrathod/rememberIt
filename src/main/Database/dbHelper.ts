@@ -1,4 +1,4 @@
-import { Database } from 'better-sqlite3';
+import db from './db';
 
 // Helper functions for interacting with the database
 
@@ -24,7 +24,6 @@ export abstract class DbRecord implements BaseRecord {
  * @returns The ID of the newly inserted row.
  */
 export async function create<T extends {}>(
-  db: Database,
   tableName: string,
   data: T,
   options?: { fields?: string[] },
@@ -33,14 +32,11 @@ export async function create<T extends {}>(
 
   const placeholders = new Array(fieldsToInsert.length).fill('?').join(', ');
 
-  console.log({ fieldsToInsert, placeholders });
   const insertStmt = db.prepare(
     `INSERT INTO ${tableName} (${fieldsToInsert.join(
       ', ',
     )}) VALUES (${placeholders})`,
   );
-
-  console.log(insertStmt);
 
   const result = await insertStmt.run(
     Object.values(data).filter((_, index) =>
@@ -62,7 +58,6 @@ export async function create<T extends {}>(
  * @returns The number of rows affected (should be 1 for a successful update).
  */
 export async function update<T extends DbRecord>(
-  db: Database,
   tableName: string,
   id: number,
   data: Partial<T>, // Use Partial<T> to allow optional data updates
@@ -97,7 +92,6 @@ export async function update<T extends DbRecord>(
  * @returns An array of objects representing the found rows.
  */
 export async function find<T extends DbRecord>(
-  db: Database,
   tableName: string,
   criteria?: { [key: string]: any },
   options?: {
@@ -146,7 +140,6 @@ export async function find<T extends DbRecord>(
  * @returns The number of rows in the table or matching the criteria.
  */
 export async function count(
-  db: Database,
   tableName: string,
   criteria?: { [key: string]: any },
 ): Promise<number> {
@@ -175,7 +168,6 @@ export async function count(
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function deleteRecord<T extends DbRecord>(
-  db: Database,
   tableName: string,
   id: number | { [key: string]: any },
 ): Promise<number> {

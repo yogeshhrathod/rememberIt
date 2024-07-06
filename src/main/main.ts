@@ -15,7 +15,6 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
-import { addFile } from './Database/Files';
 import handleMigrations from './Database/migrationRunner';
 
 class AppUpdater {
@@ -101,7 +100,6 @@ const createWindow = async () => {
 
   mainWindow.on('ready-to-show', () => {
     handleMigrations();
-    addFile();
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
     }

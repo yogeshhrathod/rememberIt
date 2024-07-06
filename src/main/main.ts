@@ -15,6 +15,9 @@ import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
+const userDataPath = app.getPath('userData');
+
+console.log(`User data path: ${userDataPath}`);
 class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';

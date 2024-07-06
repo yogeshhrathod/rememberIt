@@ -4,8 +4,8 @@
   "description": "A foundation for scalable desktop apps",
   "license": "MIT",
   "author": {
-    "name": "Electron React Boilerplate Maintainers",
-    "email": "yogeshhrathod@gmail.com",
+    "name": "Yogesh Yathod",
+    "email": "hey.yoghesh@gmail.com",
     "url": "https://github.com/yogeshhrathod"
   },
   "main": "./dist/main/main.js",

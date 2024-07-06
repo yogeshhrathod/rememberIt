@@ -18,6 +18,9 @@ module.exports = {
     'jsx-a11y/no-static-element-interactions': 'off',
     'no-plusplus': 'off',
     'react/function-component-definition': 'off',
+    'react/jsx-props-no-spreading': 'off',
+    'jsx-a11y/heading-has-content': 'off',
+    'react/no-array-index-key': 'off',
   },
   parserOptions: {
     ecmaVersion: 2022,

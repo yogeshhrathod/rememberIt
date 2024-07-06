@@ -2,6 +2,9 @@ import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import { useEffect, useState } from 'react';
 import FileDropzone from './Components/Dropzon';
+import { Button } from './Components/ui/button';
+
+import FileViewTile from './Components/composite/fileCard';
 
 function Hello() {
   const [files, setFiles] = useState<any[]>([]);
@@ -21,18 +24,23 @@ function Hello() {
   return (
     <div>
       <FileDropzone />
+      <Button>Test</Button>
+
       <div>
-        {files.map((file: any) => (
-          <div
-            style={{
-              padding: '10px',
-              cursor: 'pointer',
-            }}
-            key={file.name}
+        {files.map((file: any, index) => (
+          <FileViewTile
+            name={file.name}
+            path={file.path}
+            key={index}
             onClick={() => openFile(file.path)}
-          >
-            {file.path}
-          </div>
+          />
+          // <div
+          //   className="cursor-pointer font-bold underline"
+          //   key={file.name}
+          //   onClick={() => openFile(file.path)}
+          // >
+          //   {file.path}
+          // </div>
         ))}
       </div>
     </div>

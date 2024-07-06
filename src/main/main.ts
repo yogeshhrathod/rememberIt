@@ -36,6 +36,12 @@ ipcMain.on('open-file', async (event, arg) => {
   event.reply('open-file', 'Done');
 });
 
+ipcMain.on('file-dropped', (event, filePath: string) => {
+  console.log('File dropped:', filePath);
+  // Handle the file path as needed
+  event.reply('file-dropped', filePath);
+});
+
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
   sourceMapSupport.install();

@@ -21,13 +21,11 @@ function Hello() {
   return (
     <div>
       <FileDropzone />
+
       <div>
         {files.map((file: any) => (
           <div
-            style={{
-              padding: '10px',
-              cursor: 'pointer',
-            }}
+            className="cursor-pointer font-bold underline"
             key={file.name}
             onClick={() => openFile(file.path)}
           >

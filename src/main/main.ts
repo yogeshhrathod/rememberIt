@@ -31,6 +31,17 @@ ipcMain.on('ipc-example', async (event, arg) => {
   event.reply('ipc-example', msgTemplate('pong'));
 });
 
+ipcMain.on('open-file', async (event, arg) => {
+  shell.openPath(arg);
+  event.reply('open-file', 'Done');
+});
+
+ipcMain.on('file-dropped', (event, filePath: string) => {
+  console.log('File dropped:', filePath);
+  // Handle the file path as needed
+  event.reply('file-dropped', filePath);
+});
+
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
   sourceMapSupport.install();
@@ -78,6 +89,8 @@ const createWindow = async () => {
       preload: app.isPackaged
         ? path.join(__dirname, 'preload.js')
         : path.join(__dirname, '../../.erb/dll/preload.js'),
+      nodeIntegration: true, // Enable Node integration
+      webSecurity: false, // Disable web security to allow loading local resources
     },
   });
 

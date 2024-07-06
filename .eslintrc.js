@@ -13,6 +13,11 @@ module.exports = {
     '@typescript-eslint/no-shadow': 'error',
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': 'error',
+    'jsx-a11y/click-events-have-key-events': 'off',
+    'jsx-a11y/no-noninteractive-element-interactions': 'off',
+    'jsx-a11y/no-static-element-interactions': 'off',
+    'no-plusplus': 'off',
+    'react/function-component-definition': 'off',
   },
   parserOptions: {
     ecmaVersion: 2022,

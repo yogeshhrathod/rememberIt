@@ -101,6 +101,7 @@
         "electron-updater": "^6.1.4",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
+        "react-dropzone": "^14.2.3",
         "react-router-dom": "^6.16.0"
     },
     "devDependencies": {
@@ -171,8 +172,8 @@
         "webpack-merge": "^5.9.0"
     },
     "build": {
-        "productName": "ElectronReact",
-        "appId": "org.erb.ElectronReact",
+        "productName": "RememberIt",
+        "appId": "com.yogeshhrathod.RememberIt",
         "asar": true,
         "asarUnpack": "**\\*.{node,dll}",
         "files": [

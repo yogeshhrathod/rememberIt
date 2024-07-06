@@ -15,7 +15,8 @@
     "link-modules": "node -r ts-node/register ../../.erb/scripts/link-modules.ts"
   },
   "dependencies": {
-    "better-sqlite3": "^11.1.2"
+    "better-sqlite3": "^11.1.2",
+    "sequelize": "^6.37.3"
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.11"

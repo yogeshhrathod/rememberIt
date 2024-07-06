@@ -13,13 +13,11 @@ import { app, BrowserWindow, shell, ipcMain } from 'electron';
 
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
-import Database from 'better-sqlite3';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
+import { addFile } from './Database/Files';
+import handleMigrations from './Database/migrationRunner';
 
-const userDataPath = app.getPath('userData');
-
-console.log(`User data path: ${userDataPath}`);
 class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
@@ -101,16 +99,9 @@ const createWindow = async () => {
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 
-  const db = new Database('my-database.db', { verbose: console.log });
-
-  function createTable() {
-    const insert = db.prepare('INSERT INTO users (name, email) VALUES (?, ?)');
-    insert.run('yogesh', 'yrathod');
-    return { success: true };
-  }
-
   mainWindow.on('ready-to-show', () => {
-    createTable();
+    handleMigrations();
+    addFile();
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
     }

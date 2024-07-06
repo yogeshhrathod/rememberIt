@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 const { ipcRenderer } = window.electron;
-const FileDropzone: React.FC<void> = () => {
+const FileDropzone: React.FC<{}> = () => {
   const [isDragging, setIsDragging] = useState(false);
   let dragCounter = 0;
 

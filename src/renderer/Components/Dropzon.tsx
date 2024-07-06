@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { IFile } from 'src/schema';
+import { FILE_DROPPED } from '../../constants';
+import { IFile } from '../../schema';
+import './dropbox.css';
 
 const { ipcRenderer } = window.electron;
 const FileDropzone: React.FC<{}> = () => {
@@ -46,7 +48,7 @@ const FileDropzone: React.FC<{}> = () => {
             file_path: element.path,
           });
         }
-        ipcRenderer.sendMessage('file-dropped', filesDetails);
+        ipcRenderer.sendMessage(FILE_DROPPED, filesDetails);
       }
       setIsDragging(false);
     };

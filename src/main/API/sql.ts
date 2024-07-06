@@ -3,16 +3,21 @@ import { ADD_FILE, SELECT_FILE } from '../../constants/index';
 import { addFile, getFiles } from '../Database/Models/files';
 
 export default function initSqlOperations() {
-  ipcMain.on(ADD_FILE, async (event, arg) => {
-    console.log(`adding file`, arg);
-    await addFile(arg);
-    event.reply(ADD_FILE);
+  ipcMain.handle(ADD_FILE, async (_, arg) => {
+    try {
+      const count = await addFile(arg);
+      return { count, err: null };
+    } catch (error) {
+      return { count: null, err: error };
+    }
   });
 
-  ipcMain.on(SELECT_FILE, async (event) => {
-    console.log('selecting files');
-    const files = await getFiles();
-    console.log(files);
-    event.reply(SELECT_FILE, files);
+  ipcMain.handle(SELECT_FILE, async () => {
+    try {
+      const files = await getFiles();
+      return { files, err: null };
+    } catch (error) {
+      return { files: [], err: error };
+    }
   });
 }

@@ -4,10 +4,8 @@ import { useEffect, useState } from 'react';
 import { FILE_DROPPED, OPEN_FILE, SELECT_FILE } from 'src/constants';
 import { IFile } from 'src/schema';
 import FileDropzone from './Components/Dropzon';
-import { Button } from './Components/ui/button';
-
-import FileViewTile from './Components/composite/fileCard';
 import { getFiles } from './API/helper';
+import MainPage from './pages/mainPage';
 
 function Main() {
   const [files, setFiles] = useState<any[]>([]);
@@ -49,16 +47,7 @@ function Main() {
   return (
     <div>
       <FileDropzone />
-      <div>
-        {files.map((file: IFile, index) => (
-          <FileViewTile
-            name={file.file_name}
-            path={file.file_path}
-            key={index}
-            onClick={() => openFile(file)}
-          />
-        ))}
-      </div>
+      <MainPage files={files} openFile={openFile} />
     </div>
   );
 }

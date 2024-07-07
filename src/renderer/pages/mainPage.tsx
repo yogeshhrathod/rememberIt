@@ -55,13 +55,13 @@ export default function MainPage({
                     <div className="relative">
                       <ScrollArea>
                         <div
-                          className="flex space-x-4 pb-4 flex-wrap"
-                          style={{ height: 'calc(100vh - 200px)' }}
+                          className="flex flex-wrap pb-4 "
+                          style={{ maxHeight: 'calc(100vh - 200px)' }}
                         >
                           {files.map((file, index) => {
                             return (
                               <FileViewTile
-                                className="w-[100px]"
+                                className="flex flex-col items-center space-x-5 w-[100px]"
                                 name={file.file_name}
                                 onClick={() => openFile(file)}
                                 path={file.file_path}

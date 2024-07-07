@@ -1,6 +1,7 @@
 /* eslint-disable import/prefer-default-export */
 
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { File } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import {
   ContextMenu,
@@ -9,8 +10,6 @@ import {
   ContextMenuSeparator,
   ContextMenuTrigger,
 } from '../ui/context-menu';
-
-import { File } from 'lucide-react';
 
 interface IFileViewTile extends React.HTMLAttributes<HTMLDivElement> {
   width: number;
@@ -50,9 +49,9 @@ export function FileViewTile({
   }, [path]);
   return (
     <div
-      className={cn('space-y-3 cursor-pointer', className)}
+      className={cn('cursor-pointer', className)}
       {...props}
-      onClick={onClick}
+      onDoubleClick={onClick}
     >
       <ContextMenu>
         <ContextMenuTrigger>
@@ -64,26 +63,29 @@ export function FileViewTile({
                 width={width}
                 height={height}
                 className={cn(
-                  'object-cover transition-all hover:scale-105 aspect-square',
+                  'object-cover transition-all hover:scale-105 aspect-square p-2 rounded-2xl',
                 )}
               />
             ) : (
-              <div className="w-[100px] h-[100px]">
+              <div className="w-[100px] h-[100px] hover:scale-105 ">
                 <File size={100} strokeWidth={2} absoluteStrokeWidth />
               </div>
             )}
           </div>
         </ContextMenuTrigger>
         <ContextMenuContent className="w-40">
-          <ContextMenuItem>Open</ContextMenuItem>
+          <ContextMenuItem onClick={onClick}>Open</ContextMenuItem>
           <ContextMenuSeparator />
           <ContextMenuItem>Open Folder</ContextMenuItem>
           <ContextMenuSeparator />
           <ContextMenuItem>Details</ContextMenuItem>
         </ContextMenuContent>
       </ContextMenu>
-      <div className="space-y-1 text-sm">
-        <h3 className="font-small font-bold leading-none max-w-[100px] truncate">
+      <div className="px-2 w-full">
+        <h3
+          className="text-xs font-small font-bold leading-none max-w-[90px] truncate text-left"
+          title={name}
+        >
           {name}
         </h3>
         <p className="text-xs">JPEJ</p>

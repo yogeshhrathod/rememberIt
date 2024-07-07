@@ -5,7 +5,9 @@
 import * as fs from 'fs/promises'; // For file system operations (optional)
 import { Database } from 'better-sqlite3';
 import path from 'path';
+import log from 'electron-log/main';
 import db from './db';
+import * as migrationFiles from './migrations';
 
 // Interface for a migration file
 interface MigrationFile {
@@ -48,26 +50,22 @@ async function getAppliedVersions(): Promise<number[]> {
  * @param migrationFolder The path to the directory containing migration files.
  * @returns An array of objects representing the migration files.
  */
-async function getMigrationFiles(
-  migrationFolder: string,
-): Promise<MigrationFile[]> {
-  const files = await fs.readdir(migrationFolder);
-  const migrationFiles: MigrationFile[] = [];
+async function getMigrationFiles(): Promise<MigrationFile[]> {
+  const migrationFunction: MigrationFile[] = [];
 
-  for (const file of files) {
-    if (!file.endsWith('.ts')) continue; // Only consider TypeScript files
-
-    const migration = await import(`${migrationFolder}/${file}`);
+  for (const file of Object.keys(migrationFiles)) {
+    const migration = await migrationFiles[file];
     if (
       !migration.default ||
       !migration.default.version ||
       !migration.default.up ||
       !migration.default.down
     ) {
+      log.error(`Invalid migration file: ${file}`);
       throw new Error(`Invalid migration file: ${file}`);
     }
 
-    migrationFiles.push({
+    migrationFunction.push({
       name: file,
       version: migration.default.version,
       up: migration.default.up,
@@ -75,7 +73,7 @@ async function getMigrationFiles(
     });
   }
 
-  return migrationFiles;
+  return migrationFunction;
 }
 
 /**
@@ -85,20 +83,20 @@ async function getMigrationFiles(
  * @param migrationFolder The path to the directory containing migration files.
  * @param db The database connection instance.
  */
-async function runMigrations(migrationFolder: string): Promise<void> {
+async function runMigrations(): Promise<void> {
   const appliedVersions = await getAppliedVersions();
-  const migrationFiles = await getMigrationFiles(migrationFolder);
-  migrationFiles.sort((a, b) => a.version - b.version);
+  const migrationVersions = await getMigrationFiles();
+  migrationVersions.sort((a, b) => a.version - b.version);
 
-  for (const file of migrationFiles) {
+  for (const file of migrationVersions) {
     if (appliedVersions.includes(file.version)) {
-      console.log(
+      log.info(
         `Skipping migration: ${file.name} (version ${file.version}) - Already applied`,
       );
       continue;
     }
 
-    console.log(`Running migration: ${file.name} (version ${file.version})`);
+    log.info(`Running migration: ${file.name} (version ${file.version})`);
     await file.up(db);
 
     // Insert a new record into the migrations table after successful execution
@@ -108,13 +106,11 @@ async function runMigrations(migrationFolder: string): Promise<void> {
   }
 }
 
-const migrationFolder = path.join(__dirname, 'migrations'); // Replace with your actual migration folder path
-
 export default function handleMigrations() {
-  runMigrations(migrationFolder)
+  runMigrations()
     .then(() => {
-      console.log('Migrations applied successfully');
+      log.info('Migrations applied successfully');
       // Update persistent storage with the tracker's appliedVersions (if applicable)
     })
-    .catch((error) => console.error('Error running migrations:', error));
+    .catch((error) => log.error('Error running migrations:', error));
 }

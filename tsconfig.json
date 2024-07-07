@@ -18,5 +18,6 @@
       "@/*": ["./src/renderer/"]
     }
   },
-  "exclude": ["test", "release/build", "release/app/dist", ".erb/dll"]
+  "exclude": ["test", "release/build", "release/app/dist", ".erb/dll"],
+  "include": ["src/main/Database/migrations/*.ts"]
 }

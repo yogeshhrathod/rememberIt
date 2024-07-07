@@ -10,10 +10,10 @@ labels: 'bug'
 
 <!-- If the following boxes are not ALL checked, your issue is likely to be closed -->
 
--   [ ] Using npm
--   [ ] Using an up-to-date [`main` branch](https://github.com//yogeshhrathod/rememberIt/tree/main)
--   [ ] Tried solutions mentioned in [#400](https://github.com//yogeshhrathod/rememberIt/issues/400)
--   [ ] For issue in production release, add devtools output of `DEBUG_PROD=true npm run build && npm start`
+- [ ] Using npm
+- [ ] Using an up-to-date [`main` branch](https://github.com//yogeshhrathod/rememberIt/tree/main)
+- [ ] Tried solutions mentioned in [#400](https://github.com//yogeshhrathod/rememberIt/issues/400)
+- [ ] For issue in production release, add devtools output of `DEBUG_PROD=true npm run build && npm start`
 
 ## Expected Behavior
 
@@ -50,10 +50,10 @@ labels: 'bug'
 
 <!--- Include as many relevant details about the environment you experienced the bug in -->
 
--   Node version :
--   electron-react-boilerplate version or branch :
--   Operating System and version :
--   Link to your project :
+- Node version :
+- remember-it version or branch :
+- Operating System and version :
+- Link to your project :
 
 <!---
 ❗️❗️ Also, please consider donating (https://opencollective.com/yogeshhrathod-594) ❗️❗️

@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { FILE_DROPPED } from '../../constants';
+import { IFile } from '../../schema';
+import './dropbox.css';
 
 const { ipcRenderer } = window.electron;
 const FileDropzone: React.FC<{}> = () => {
@@ -36,13 +39,16 @@ const FileDropzone: React.FC<{}> = () => {
       dragCounter = 0;
       if (event.dataTransfer) {
         const { files } = event.dataTransfer;
-        const filesDetails = [];
+        const filesDetails: IFile[] = [];
 
         for (let itemIndex = 0; itemIndex < files.length; itemIndex++) {
           const element = files[itemIndex];
-          filesDetails.push({ name: element.name, path: element.path });
+          filesDetails.push({
+            file_name: element.name,
+            file_path: element.path,
+          });
         }
-        ipcRenderer.sendMessage('file-dropped', filesDetails);
+        ipcRenderer.sendMessage(FILE_DROPPED, filesDetails);
       }
       setIsDragging(false);
     };

@@ -1,43 +1,93 @@
-import React from 'react';
+/* eslint-disable import/prefer-default-export */
 
+import { useEffect, useState } from 'react';
+import { cn } from '../../lib/utils';
 import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardFooter,
-} from '../ui/card';
-import { Button } from '../ui/button';
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuSeparator,
+  ContextMenuTrigger,
+} from '../ui/context-menu';
 
-interface IFileCard {
+import { File } from 'lucide-react';
+
+interface IFileViewTile extends React.HTMLAttributes<HTMLDivElement> {
+  width: number;
+  height: number;
   name: string;
   path: string;
-  onClick: () => void;
-}
-function isImage(filePath: string): boolean {
-  // Extract file extension from the filePath
-  const extension = filePath.split('.').pop()?.toLowerCase();
-
-  // List of common image file extensions
-  const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg'];
-
-  // Check if the extension exists in the imageExtensions array
-  return extension ? imageExtensions.includes(extension) : false;
 }
 
-const FileViewTile: React.FC<IFileCard> = ({ name, path, onClick }) => {
+function isImagePath(path: string) {
+  const imageExtensions = [
+    'jpg',
+    'jpeg',
+    'png',
+    'gif',
+    'bmp',
+    'webp',
+    'tiff',
+    'svg',
+    // 'jfif',
+  ];
+  const extension = path.split('.').pop().toLowerCase();
+  return imageExtensions.includes(extension);
+}
+
+export function FileViewTile({
+  width,
+  height,
+  className,
+  name,
+  path,
+  onClick,
+  ...props
+}: IFileViewTile) {
+  const [isImage, setIsImage] = useState(true);
+  useEffect(() => {
+    setIsImage(isImagePath(path));
+  }, [path]);
   return (
-    <Card className="w-[250px]">
-      <CardHeader>
-        <CardTitle>{name}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        {isImage(path) && <img src={path} alt={name} />}
-      </CardContent>
-      <CardFooter className="flex justify-between">
-        <Button onClick={onClick}>Open</Button>
-      </CardFooter>
-    </Card>
+    <div
+      className={cn('space-y-3 cursor-pointer', className)}
+      {...props}
+      onClick={onClick}
+    >
+      <ContextMenu>
+        <ContextMenuTrigger>
+          <div className="overflow-hidden rounded-md">
+            {isImage ? (
+              <img
+                src={path}
+                alt={name}
+                width={width}
+                height={height}
+                className={cn(
+                  'object-cover transition-all hover:scale-105 aspect-square',
+                )}
+              />
+            ) : (
+              <div className="w-[100px] h-[100px]">
+                <File size={100} strokeWidth={2} absoluteStrokeWidth />
+              </div>
+            )}
+          </div>
+        </ContextMenuTrigger>
+        <ContextMenuContent className="w-40">
+          <ContextMenuItem>Open</ContextMenuItem>
+          <ContextMenuSeparator />
+          <ContextMenuItem>Open Folder</ContextMenuItem>
+          <ContextMenuSeparator />
+          <ContextMenuItem>Details</ContextMenuItem>
+        </ContextMenuContent>
+      </ContextMenu>
+      <div className="space-y-1 text-sm">
+        <h3 className="font-small font-bold leading-none max-w-[100px] truncate">
+          {name}
+        </h3>
+        <p className="text-xs">JPEJ</p>
+      </div>
+    </div>
   );
-};
-export default FileViewTile;
+}

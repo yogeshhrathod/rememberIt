@@ -24,7 +24,6 @@ class AppUpdater {
     autoUpdater.logger = log;
     autoUpdater.checkForUpdatesAndNotify();
     initAPI();
-    handleMigrations();
   }
 }
 
@@ -56,6 +55,7 @@ const installExtensions = async () => {
 };
 
 const createWindow = async () => {
+  handleMigrations();
   if (isDebug) {
     await installExtensions();
   }

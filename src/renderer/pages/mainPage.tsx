@@ -1,5 +1,4 @@
-import { PlusCircledIcon } from '@radix-ui/react-icons';
-
+import React from 'react';
 import { ScrollArea, ScrollBar } from '../Components/ui/scroll-area';
 import { Separator } from '../Components/ui/separator';
 import {
@@ -8,14 +7,19 @@ import {
   TabsList,
   TabsTrigger,
 } from '../Components/ui/tabs';
-import { Button } from '../Components/ui/button';
 
 import { FileViewTile } from '../Components/composite/fileCard';
 import { Menu } from '../Components/composite/menu';
 import { Sidebar } from '../Components/composite/sidebar';
 import { IFile } from '../../schema';
 
-export default function MainPage({ files, openFile }: { files: IFile[] }) {
+export default function MainPage({
+  files,
+  openFile,
+}: {
+  files: IFile[];
+  openFile: (path: IFile) => void;
+}) {
   return (
     <div>
       <Menu />
@@ -25,17 +29,26 @@ export default function MainPage({ files, openFile }: { files: IFile[] }) {
             <Sidebar className="hidden lg:block" />
             <div className="col-span-3 lg:col-span-4 lg:border-l">
               <div className="h-full px-4 py-6 lg:px-8">
-                <Tabs defaultValue="music" className="h-full space-y-1">
+                <Tabs defaultValue="recents" className="h-full space-y-1">
                   <div className="space-between flex items-center">
                     <TabsList>
-                      <TabsTrigger value="music" className="relative">
+                      <TabsTrigger value="recents" className="relative">
                         Recents
                       </TabsTrigger>
-                      <TabsTrigger value="podcasts">Working</TabsTrigger>
+                      <TabsTrigger value="files">Files</TabsTrigger>
+                      <TabsTrigger value="url" disabled>
+                        URL
+                      </TabsTrigger>
+                      <TabsTrigger value="cmd" disabled>
+                        Commands
+                      </TabsTrigger>
+                      <TabsTrigger value="text" disabled>
+                        Text
+                      </TabsTrigger>
                     </TabsList>
                   </div>
                   <TabsContent
-                    value="music"
+                    value="recents"
                     className="border-none p-0 outline-none"
                   >
                     <Separator className="mb-2" />
@@ -64,7 +77,7 @@ export default function MainPage({ files, openFile }: { files: IFile[] }) {
                     </div>
                   </TabsContent>
                   <TabsContent
-                    value="podcasts"
+                    value="files"
                     className="h-full flex-col border-none p-0 data-[state=active]:flex"
                   >
                     <div className="flex items-center justify-between">

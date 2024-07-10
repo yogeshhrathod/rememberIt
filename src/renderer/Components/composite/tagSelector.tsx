@@ -11,11 +11,22 @@ import {
 } from '../ui/dialog';
 // import MultiSelect from './selectScrollable';
 import { MultiSelect } from './selectScrollable';
+import { IFileTag } from '../../../schema';
+
+interface DialogTagSelectorProps {
+  onTagAddHandler: (files: any) => void;
+  onDialogClose: () => void;
+}
 
 // eslint-disable-next-line import/prefer-default-export
-export function DialogTagSelector({ onTagAdd = '', onDialoageClose }) {
+export function DialogTagSelector({
+  onTagAddHandler,
+  onDialogClose,
+}: DialogTagSelectorProps) {
+  const [selectedTags, setSelectedTags] = React.useState<IFileTag[]>([]);
+
   return (
-    <Dialog defaultOpen onOpenChange={onDialoageClose}>
+    <Dialog defaultOpen onOpenChange={onDialogClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Select Tag</DialogTitle>
@@ -25,7 +36,13 @@ export function DialogTagSelector({ onTagAdd = '', onDialoageClose }) {
         </DialogHeader>
         <div className="flex items-center space-x-2">
           <div className="grid flex-1 gap-2">
-            <MultiSelect />
+            <MultiSelect
+              tags={[
+                { tag_id: 1, name: 'Important', weight: 0 },
+                { tag_id: 2, name: 'Urgent', weight: 0 },
+              ]}
+              onSelect={(newSelectedTags) => setSelectedTags(newSelectedTags)}
+            />
           </div>
         </div>
 
@@ -34,7 +51,9 @@ export function DialogTagSelector({ onTagAdd = '', onDialoageClose }) {
             <Button
               type="button"
               variant="secondary"
-              onClick={() => onTagAdd('name', 'age')}
+              onClick={() => {
+                onTagAddHandler(selectedTags);
+              }}
             >
               Save Changes
             </Button>

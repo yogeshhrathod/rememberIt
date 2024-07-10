@@ -15,7 +15,8 @@ export default {
     await db.exec(`
       CREATE TABLE Tags (
         tag_id INTEGER PRIMARY KEY AUTOINCREMENT,
-        tag_name TEXT NOT NULL UNIQUE
+        name TEXT NOT NULL UNIQUE,
+        weight INTEGER DEFAULT 1
       );
     `);
 
@@ -30,9 +31,8 @@ export default {
       );
     `);
 
-    // Create FTS5 Virtual Tables (optional)
     await db.exec(`
-      CREATE VIRTUAL TABLE FilesFTS_Name USING FTS5(file_name);
+      INSERT INTO Tags (name) VALUES ('Important'), ('Urgent');
     `);
 
     await db.exec(`
@@ -40,7 +40,7 @@ export default {
     `);
 
     await db.exec(`
-      CREATE VIRTUAL TABLE FilesFTS USING FTS5(tag_name);
+      CREATE VIRTUAL TABLE FilesFTS USING FTS5(name);
     `);
   },
   // Optional down function for rollback functionality (if needed)

@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { IFile } from '../../schema';
+import { IFile, IFileTag } from '../../schema';
 import './dropbox.css';
 import { DialogTagSelector } from './composite/tagSelector';
 import { FILE_DROPPED } from '../../constants';
 
 const { ipcRenderer } = window.electron;
+
 const FileDropzone: React.FC<{}> = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [isDroped, setIsDroped] = useState(false);
   const [droppedFiles, setDroppedFiles] = useState<IFile[]>([]);
   let dragCounter = 0;
 
-  const onTagAddHandler = (tags, files) => {
+  const onTagAddHandler = (tags: IFileTag) => {
     if (droppedFiles.length) {
-      ipcRenderer.sendMessage(FILE_DROPPED, droppedFiles);
-      setDroppedFiles(files);
+      ipcRenderer.sendMessage(FILE_DROPPED, droppedFiles, tags);
+      setDroppedFiles([]);
     }
   };
 
@@ -52,7 +53,7 @@ const FileDropzone: React.FC<{}> = () => {
         const filesDetails: IFile[] = [];
 
         for (let itemIndex = 0; itemIndex < files.length; itemIndex++) {
-          const element = files[itemIndex];
+          const element = files[itemIndex] as File & { path: string };
           filesDetails.push({
             file_name: element.name,
             file_path: element.path,
@@ -86,8 +87,8 @@ const FileDropzone: React.FC<{}> = () => {
       <div>
         {isDroped && (
           <DialogTagSelector
-            onTagAdd={onTagAddHandler}
-            onDialoageClose={() => {
+            onTagAddHandler={onTagAddHandler}
+            onDialogClose={() => {
               setIsDroped(false);
             }}
           />

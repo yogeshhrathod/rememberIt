@@ -4,28 +4,22 @@ import { X } from 'lucide-react';
 import { Command as CommandPrimitive } from 'cmdk';
 import { Badge } from '../ui/badge';
 import { Command, CommandGroup, CommandItem, CommandList } from '../ui/command';
+import { IFileTag } from '../../../schema';
 
-type Framework = Record<'value' | 'label', string>;
-
-const FRAMEWORKS = [
-  {
-    value: 'important',
-    label: 'important',
-  },
-  {
-    value: 'script',
-    label: 'script',
-  },
-] satisfies Framework[];
-
-export function MultiSelect() {
+export function MultiSelect({
+  onSelect,
+  tags,
+}: {
+  onSelect: (selected: IFileTag[]) => void;
+  tags: IFileTag[];
+}) {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [open, setOpen] = React.useState(false);
-  const [selected, setSelected] = React.useState<Framework[]>([FRAMEWORKS[1]]);
+  const [selected, setSelected] = React.useState<IFileTag[]>([]);
   const [inputValue, setInputValue] = React.useState('');
 
-  const handleUnselect = React.useCallback((framework: Framework) => {
-    setSelected((prev) => prev.filter((s) => s.value !== framework.value));
+  const handleUnselect = React.useCallback((tag: IFileTag) => {
+    setSelected((prev) => prev.filter((s) => s.tag_id !== tag.tag_id));
   }, []);
 
   const handleKeyDown = React.useCallback(
@@ -50,8 +44,17 @@ export function MultiSelect() {
     [],
   );
 
-  const selectables = FRAMEWORKS.filter(
-    (framework) => !selected.includes(framework),
+  const selectables = tags.filter(
+    (tag) => !selected.some((s) => s.tag_id === tag.tag_id),
+  );
+
+  const handleSelect = React.useCallback(
+    (fileTag: IFileTag) => {
+      setInputValue('');
+      setSelected((prev) => [...prev, fileTag]);
+      onSelect([...selected, fileTag]);
+    },
+    [onSelect, selected],
   );
 
   return (
@@ -61,24 +64,24 @@ export function MultiSelect() {
     >
       <div className="group rounded-md border border-input px-3 py-2 text-sm ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
         <div className="flex flex-wrap gap-1">
-          {selected.map((framework) => {
+          {selected.map((tag) => {
             return (
-              <Badge key={framework.value} variant="secondary">
-                {framework.label}
+              <Badge key={tag.tag_id} variant="secondary">
+                {tag.name}
                 <button
                   type="button"
                   aria-label="remove"
                   className="ml-1 rounded-full outline-none ring-offset-background "
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') {
-                      handleUnselect(framework);
+                      handleUnselect(tag);
                     }
                   }}
                   onMouseDown={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
                   }}
-                  onClick={() => handleUnselect(framework)}
+                  onClick={() => handleUnselect(tag)}
                 >
                   <X className="h-3 w-3 text-muted-foreground hover:text-foreground hover:text-red-500" />
                 </button>
@@ -92,7 +95,7 @@ export function MultiSelect() {
             onValueChange={setInputValue}
             onBlur={() => setOpen(false)}
             onFocus={() => setOpen(true)}
-            placeholder="Select frameworks..."
+            placeholder="Select file tags..."
             className="ml-2 flex-1 bg-transparent outline-none placeholder:text-muted-foreground"
           />
         </div>
@@ -102,21 +105,18 @@ export function MultiSelect() {
           {open && selectables.length > 0 ? (
             <div className="absolute top-0 z-10 w-full rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in">
               <CommandGroup className="h-full overflow-auto">
-                {selectables.map((framework) => {
+                {selectables.map((tag) => {
                   return (
                     <CommandItem
-                      key={framework.value}
+                      key={tag.tag_id}
                       onMouseDown={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
                       }}
-                      onSelect={() => {
-                        setInputValue('');
-                        setSelected((prev) => [...prev, framework]);
-                      }}
+                      onSelect={() => handleSelect(tag)}
                       className="cursor-pointer"
                     >
-                      {framework.label}
+                      {tag.name}
                     </CommandItem>
                   );
                 })}

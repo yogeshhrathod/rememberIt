@@ -21,6 +21,7 @@ module.exports = {
     'react/jsx-props-no-spreading': 'off',
     'jsx-a11y/heading-has-content': 'off',
     'react/no-array-index-key': 'off',
+    'import/prefer-default-export': 'off',
   },
   parserOptions: {
     ecmaVersion: 2022,

@@ -1,11 +1,12 @@
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import { useEffect, useState } from 'react';
-import { FILE_DROPPED, OPEN_FILE, SELECT_FILE } from 'src/constants';
-import { IFile } from 'src/schema';
-import FileDropzone from './Components/Dropzon';
+import { FILE_DROPPED, OPEN_FILE, SELECT_FILE } from '../constants';
+import { IFile } from '../schema';
+import FileDropzone from './Components/Dropzone';
 import { getFiles } from './API/helper';
 import MainPage from './pages/mainPage';
+import React from 'react';
 
 function Main() {
   const [files, setFiles] = useState<any[]>([]);

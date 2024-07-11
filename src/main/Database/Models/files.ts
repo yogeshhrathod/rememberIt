@@ -2,28 +2,37 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-await-in-loop */
 import { IFile, IFileTag } from '../../../schema';
-import { create, find } from '../dbHelper';
+import db from '../db';
+import { find } from '../dbHelper';
 
 const FILE_TABLE = 'Files';
 
 export async function addFiles(files: IFile[], tags: IFileTag[]) {
   try {
-    const fileIds = await Promise.all(
-      files.map((file) => create(FILE_TABLE, file)),
-    );
+    const trx = db.transaction(() => {
+      for (const file of files) {
+        const filId = db
+          .prepare(
+            `INSERT INTO ${FILE_TABLE} (file_name, file_path, size, format) VALUES (?, ?, ?, ?)`,
+          )
+          .run(
+            file.file_name,
+            file.file_path,
+            file.size,
+            file.format,
+          ).lastInsertRowid;
 
-    for (const file_id of fileIds) {
-      for (const tag of tags) {
-        await create('FileTags', { file_id, tag_id: tag.tag_id });
+        for (const tag of tags) {
+          db.prepare(
+            `INSERT INTO FileTags (file_id, tag_id, weight) VALUES (?, ?, ?)`,
+          ).run(filId, tag.tag_id, tag.weight);
+        }
       }
-    }
-
-    // await db.commitTransaction();
+    });
+    trx();
+    return { count: files.length, error: null };
   } catch (error) {
-    console.log(error);
-
-    // await db.rollbackTransaction();
-    throw error;
+    return { count: 0, error };
   }
 }
 export async function getFiles() {

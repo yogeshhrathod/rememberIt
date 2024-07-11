@@ -61,12 +61,13 @@ export default function MainPage({
                           {files.map((file, index) => {
                             return (
                               <FileViewTile
-                                className="flex flex-col items-center space-x-5 w-[100px]"
+                                className="flex flex-col items-center w-[100px]"
                                 name={file.file_name}
                                 onClick={() => openFile(file)}
                                 path={file.file_path}
                                 width={100}
                                 height={100}
+                                meta={file}
                                 key={index}
                               />
                             );

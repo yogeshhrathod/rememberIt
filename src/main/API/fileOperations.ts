@@ -10,17 +10,7 @@ export default function initFileOperations() {
   });
 
   ipcMain.on(FILE_DROPPED, async (event, files: IFile[], tags: IFileTag[]) => {
-    let results = {};
-    const count = await addFiles(files, tags);
-    // eslint-disable-next-line no-restricted-syntax
-    for (const file of files) {
-      try {
-        // eslint-disable-next-line no-await-in-loop
-        results = { count, err: null, files };
-      } catch (err) {
-        results = { count: 0, err, file };
-      }
-    }
-    event.reply(FILE_DROPPED, results);
+    const { count, error } = await addFiles(files, tags);
+    event.reply(FILE_DROPPED, { files, count, error });
   });
 }

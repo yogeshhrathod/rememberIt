@@ -1,4 +1,4 @@
-import { IFile } from '../../schema';
+import { IFile, IFileTag } from '../../schema';
 import { ADD_FILE, SELECT_FILE } from '../../constants';
 
 // eslint-disable-next-line import/prefer-default-export
@@ -8,9 +8,9 @@ export async function getFiles() {
   if (err) return [];
   return files;
 }
-export async function addFiles(files: IFile[]) {
+export async function addFiles(files: IFile[], tags: IFileTag[]) {
   const { count, err }: { count: number; err: any } =
-    await window.electron.ipcRenderer.invoke(ADD_FILE, files);
+    await window.electron.ipcRenderer.invoke(ADD_FILE, files, tags);
   if (err) return 0;
   return count;
 }

@@ -6,17 +6,25 @@ export default {
     // Create Tables
     await db.exec(`
       CREATE TABLE Files (
-        file_id INTEGER PRIMARY KEY AUTOINCREMENT,
-        file_name TEXT NOT NULL,
-        file_path TEXT NOT NULL UNIQUE  -- Enforce unique file paths
+      file_id INTEGER PRIMARY KEY AUTOINCREMENT,
+      file_name TEXT NOT NULL,
+      file_path TEXT NOT NULL UNIQUE,
+      created DATETIME NOT NULL DEFAULT (datetime('now', 'localtime')),
+      last_accessed DATETIME NOT NULL DEFAULT (datetime('now', 'localtime')),
+      size INTEGER NOT NULL,
+      format TEXT NOT NULL,
+      description TEXT,
+      extras TEXT
       );
     `);
 
     await db.exec(`
       CREATE TABLE Tags (
-        tag_id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL UNIQUE,
-        weight INTEGER DEFAULT 1
+      tag_id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL UNIQUE,
+      weight INTEGER DEFAULT 1,
+      icon TEXT,
+      created DATETIME NOT NULL DEFAULT (datetime('now', 'localtime'))
       );
     `);
 

@@ -6,6 +6,11 @@ import { FILE_DROPPED } from '../../constants';
 
 const { ipcRenderer } = window.electron;
 
+const getFormatFromMime = (mime: string) => {
+  if (mime && mime.length === 0) return '';
+  return mime.split('/')[1];
+};
+
 const FileDropzone: React.FC<{}> = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [isDroped, setIsDroped] = useState(false);
@@ -57,6 +62,8 @@ const FileDropzone: React.FC<{}> = () => {
           filesDetails.push({
             file_name: element.name,
             file_path: element.path,
+            size: element.size,
+            format: getFormatFromMime(element.type),
           });
         }
         setDroppedFiles(filesDetails);

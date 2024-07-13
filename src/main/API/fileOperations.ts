@@ -1,7 +1,7 @@
 import { ipcMain, shell } from 'electron';
-import { IFile } from 'src/schema';
-import { addFile } from '../Database/Models/files';
+import { addFiles } from '../Database/Models/files';
 import { FILE_DROPPED, OPEN_FILE } from '../../constants/index';
+import { IFileTag, IFile } from '../../schema';
 
 export default function initFileOperations() {
   ipcMain.on(OPEN_FILE, async (event, arg: IFile) => {
@@ -9,18 +9,8 @@ export default function initFileOperations() {
     event.reply(OPEN_FILE, 'Done');
   });
 
-  ipcMain.on(FILE_DROPPED, async (event, files: IFile[]) => {
-    let results = {};
-    // eslint-disable-next-line no-restricted-syntax
-    for (const file of files) {
-      try {
-        // eslint-disable-next-line no-await-in-loop
-        const count = await addFile(file);
-        results = { count, err: null, files };
-      } catch (err) {
-        results = { count: 0, err, file };
-      }
-    }
-    event.reply(FILE_DROPPED, results);
+  ipcMain.on(FILE_DROPPED, async (event, files: IFile[], tags: IFileTag[]) => {
+    const { count, error } = await addFiles(files, tags);
+    event.reply(FILE_DROPPED, { files, count, error });
   });
 }

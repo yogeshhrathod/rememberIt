@@ -6,16 +6,25 @@ export default {
     // Create Tables
     await db.exec(`
       CREATE TABLE Files (
-        file_id INTEGER PRIMARY KEY AUTOINCREMENT,
-        file_name TEXT NOT NULL,
-        file_path TEXT NOT NULL UNIQUE  -- Enforce unique file paths
+      file_id INTEGER PRIMARY KEY AUTOINCREMENT,
+      file_name TEXT NOT NULL,
+      file_path TEXT NOT NULL UNIQUE,
+      created DATETIME NOT NULL DEFAULT (datetime('now', 'localtime')),
+      last_accessed DATETIME NOT NULL DEFAULT (datetime('now', 'localtime')),
+      size INTEGER NOT NULL,
+      format TEXT NOT NULL,
+      description TEXT,
+      extras TEXT
       );
     `);
 
     await db.exec(`
       CREATE TABLE Tags (
-        tag_id INTEGER PRIMARY KEY AUTOINCREMENT,
-        tag_name TEXT NOT NULL UNIQUE
+      tag_id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL UNIQUE,
+      weight INTEGER DEFAULT 1,
+      icon TEXT,
+      created DATETIME NOT NULL DEFAULT (datetime('now', 'localtime'))
       );
     `);
 
@@ -30,9 +39,8 @@ export default {
       );
     `);
 
-    // Create FTS5 Virtual Tables (optional)
     await db.exec(`
-      CREATE VIRTUAL TABLE FilesFTS_Name USING FTS5(file_name);
+      INSERT INTO Tags (name) VALUES ('Important'), ('Urgent');
     `);
 
     await db.exec(`
@@ -40,7 +48,7 @@ export default {
     `);
 
     await db.exec(`
-      CREATE VIRTUAL TABLE FilesFTS USING FTS5(tag_name);
+      CREATE VIRTUAL TABLE FilesFTS USING FTS5(name);
     `);
   },
   // Optional down function for rollback functionality (if needed)

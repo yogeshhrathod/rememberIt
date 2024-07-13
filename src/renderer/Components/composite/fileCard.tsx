@@ -10,12 +10,15 @@ import {
   ContextMenuSeparator,
   ContextMenuTrigger,
 } from '../ui/context-menu';
+import { IFile } from '../../../schema';
+import { getFriendlyFileSize } from '../../util';
 
 interface IFileViewTile extends React.HTMLAttributes<HTMLDivElement> {
   width: number;
   height: number;
   name: string;
   path: string;
+  meta: IFile;
 }
 
 function isImagePath(path: string) {
@@ -28,9 +31,8 @@ function isImagePath(path: string) {
     'webp',
     'tiff',
     'svg',
-    // 'jfif',
   ];
-  const extension = path.split('.').pop().toLowerCase();
+  const extension = path?.split('.')?.pop()?.toLowerCase();
   return imageExtensions.includes(extension);
 }
 
@@ -41,6 +43,7 @@ export function FileViewTile({
   name,
   path,
   onClick,
+  meta,
   ...props
 }: IFileViewTile) {
   const [isImage, setIsImage] = useState(true);
@@ -49,7 +52,7 @@ export function FileViewTile({
   }, [path]);
   return (
     <div
-      className={cn('cursor-pointer', className)}
+      className={cn('cursor-pointer overflow-hidden', className)}
       {...props}
       onDoubleClick={onClick}
     >
@@ -81,14 +84,14 @@ export function FileViewTile({
           <ContextMenuItem>Details</ContextMenuItem>
         </ContextMenuContent>
       </ContextMenu>
-      <div className="px-2 w-full">
-        <h3
-          className="text-xs font-small font-bold leading-none max-w-[90px] truncate text-left"
-          title={name}
-        >
+      <div className="w-full px-2">
+        <h3 className="text-xs font-small font-bold truncate" title={name}>
           {name}
         </h3>
-        <p className="text-xs">JPEJ</p>
+        <span className="flex text-gray-500 justify-between">
+          <p className="text-xs inline">{meta?.format?.toUpperCase()}</p>
+          <p className="text-xs inline">{getFriendlyFileSize(meta?.size)}</p>
+        </span>
       </div>
     </div>
   );

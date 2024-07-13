@@ -1,12 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { FILE_DROPPED } from '../../constants';
-import { IFile } from '../../schema';
+import { IFile, IFileTag } from '../../schema';
 import './dropbox.css';
+import { DialogTagSelector } from './composite/tagSelector';
+import { FILE_DROPPED } from '../../constants';
 
 const { ipcRenderer } = window.electron;
+
+const getFormatFromMime = (mime: string) => {
+  if (mime && mime.length === 0) return '';
+  return mime.split('/')[1];
+};
+
 const FileDropzone: React.FC<{}> = () => {
   const [isDragging, setIsDragging] = useState(false);
+  const [isDroped, setIsDroped] = useState(false);
+  const [droppedFiles, setDroppedFiles] = useState<IFile[]>([]);
   let dragCounter = 0;
+
+  const onTagAddHandler = (tags: IFileTag) => {
+    if (droppedFiles.length) {
+      ipcRenderer.sendMessage(FILE_DROPPED, droppedFiles, tags);
+      setDroppedFiles([]);
+    }
+  };
 
   useEffect(() => {
     const handleDragEnter = (e: DragEvent) => {
@@ -31,24 +47,26 @@ const FileDropzone: React.FC<{}> = () => {
       e.preventDefault();
       e.stopPropagation();
     };
-
     const handleDrop = (event: DragEvent) => {
       event.preventDefault();
       event.stopPropagation();
       // eslint-disable-next-line react-hooks/exhaustive-deps
+      setIsDroped(true);
       dragCounter = 0;
       if (event.dataTransfer) {
         const { files } = event.dataTransfer;
         const filesDetails: IFile[] = [];
 
         for (let itemIndex = 0; itemIndex < files.length; itemIndex++) {
-          const element = files[itemIndex];
+          const element = files[itemIndex] as File & { path: string };
           filesDetails.push({
             file_name: element.name,
             file_path: element.path,
+            size: element.size,
+            format: getFormatFromMime(element.type),
           });
         }
-        ipcRenderer.sendMessage(FILE_DROPPED, filesDetails);
+        setDroppedFiles(filesDetails);
       }
       setIsDragging(false);
     };
@@ -67,11 +85,23 @@ const FileDropzone: React.FC<{}> = () => {
   }, []);
 
   return (
-    isDragging && (
-      <div className="dropzon-overlay">
-        <p>Drop your files here</p>
+    <div>
+      {isDragging && (
+        <div className="dropzon-overlay">
+          <p>Drop your files here</p>
+        </div>
+      )}
+      <div>
+        {isDroped && (
+          <DialogTagSelector
+            onTagAddHandler={onTagAddHandler}
+            onDialogClose={() => {
+              setIsDroped(false);
+            }}
+          />
+        )}
       </div>
-    )
+    </div>
   );
 };
 

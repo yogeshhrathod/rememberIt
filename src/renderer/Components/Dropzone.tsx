@@ -3,6 +3,9 @@ import { IFile, IFileTag } from '../../schema';
 import './dropbox.css';
 import { DialogTagSelector } from './composite/tagSelector';
 import { addFiles } from '../API/helper';
+import { fetchFilesRedux } from '../redux/filesSlice';
+// eslint-disable-next-line import/order
+import { useDispatch } from 'react-redux';
 
 const getFormatFromMime = (mime: string) => {
   if (mime && mime.length === 0) return '';
@@ -12,12 +15,14 @@ const getFormatFromMime = (mime: string) => {
 const FileDropzone: React.FC<{}> = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [isDroped, setIsDroped] = useState(false);
+  const dispatch = useDispatch();
   const [droppedFiles, setDroppedFiles] = useState<IFile[]>([]);
   let dragCounter = 0;
 
   const onTagAddHandler = (tags: IFileTag[]) => {
     if (droppedFiles.length) {
       addFiles(droppedFiles, tags);
+      dispatch(fetchFilesRedux() as any);
       setDroppedFiles([]);
     }
   };

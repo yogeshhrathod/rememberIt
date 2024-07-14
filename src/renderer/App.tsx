@@ -1,35 +1,25 @@
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
-import React, { useEffect, useState } from 'react';
-import { FILE_DROPPED } from '../constants';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { IFile } from '../schema';
 import FileDropzone from './Components/Dropzone';
-import { getFiles, openFile } from './API/helper';
 import MainPage from './pages/mainPage';
+import { fetchFilesRedux } from './redux/filesSlice'; // Import UnknownAction type
 
 function Main() {
-  const [files, setFiles] = useState<any[]>([]);
+  const files = useSelector(
+    (state: { files: { value: IFile[] } }) => state.files.value,
+  );
+  const dispatch = useDispatch();
   useEffect(() => {
-    // eslint-disable-next-line promise/catch-or-return
-    getFiles().then((dbFiles) => setFiles(dbFiles));
-
-    window.electron.ipcRenderer.on(FILE_DROPPED, () => {
-      console.log('File Dropped');
-
-      getFiles()
-        .then((dbFiles) => setFiles(dbFiles))
-        .catch(console.error);
-    });
-  }, []);
-
-  const openFileHandler = (file: IFile) => {
-    openFile(file);
-  };
+    dispatch(fetchFilesRedux() as any); // Cast the action to UnknownAction type
+  }, [dispatch]);
 
   return (
     <div>
       <FileDropzone />
-      <MainPage files={files} openFile={openFileHandler} />
+      <MainPage files={files} />
     </div>
   );
 }

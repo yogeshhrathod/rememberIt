@@ -13,13 +13,7 @@ import { Menu } from '../Components/composite/menu';
 import { Sidebar } from '../Components/composite/sidebar';
 import { IFile } from '../../schema';
 
-export default function MainPage({
-  files,
-  openFile,
-}: {
-  files: IFile[];
-  openFile: (path: IFile) => void;
-}) {
+export default function MainPage({ files }: { files: IFile[] }) {
   return (
     <div>
       <Menu />
@@ -63,7 +57,6 @@ export default function MainPage({
                               <FileViewTile
                                 className="flex flex-col items-center w-[100px]"
                                 name={file.file_name}
-                                onClick={() => openFile(file)}
                                 path={file.file_path}
                                 width={100}
                                 height={100}

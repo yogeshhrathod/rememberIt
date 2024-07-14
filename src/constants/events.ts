@@ -1,10 +1,14 @@
 import { IFile } from '../schema';
-// DB ACTION
-export const ADD_FILE = 'add-file';
-export const SELECT_FILE = 'select-files';
+
+// file db operations
+export const ADD_FILES = 'add-files';
+export const GET_FILES = 'get-files';
+export const REMOVE_FILE = 'remove-file';
+
+// tags db operations
 export const ADD_TAG = 'add-tag';
 
-// FILE ACTION
+// file system operations
 export const OPEN_FILE = 'open-file';
 
 export const FILE_DROPPED = 'file-dropped';

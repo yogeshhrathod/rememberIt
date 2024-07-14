@@ -33,7 +33,7 @@ export default {
         file_id INTEGER NOT NULL,
         tag_id INTEGER NOT NULL,
         weight INTEGER DEFAULT 1,  -- Optional weight for tag importance
-        FOREIGN KEY (file_id) REFERENCES Files(file_id),
+        FOREIGN KEY (file_id) REFERENCES Files(file_id) ON DELETE CASCADE,
         FOREIGN KEY (tag_id) REFERENCES Tags(tag_id),
         PRIMARY KEY (file_id, tag_id)  -- Composite primary key
       );

@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState } from 'react';
 import { File } from 'lucide-react';
+import { TrashIcon } from '@radix-ui/react-icons';
+import { useDispatch } from 'react-redux';
 import { cn } from '../../lib/utils';
 import {
   ContextMenu,
@@ -12,6 +14,8 @@ import {
 } from '../ui/context-menu';
 import { IFile } from '../../../schema';
 import { getFriendlyFileSize } from '../../util';
+import { openFile, removeFiles } from '../../API/helper';
+import { removeFileRedux } from '../../redux/filesSlice';
 
 interface IFileViewTile extends React.HTMLAttributes<HTMLDivElement> {
   width: number;
@@ -42,19 +46,27 @@ export function FileViewTile({
   className,
   name,
   path,
-  onClick,
   meta,
   ...props
 }: IFileViewTile) {
   const [isImage, setIsImage] = useState(true);
+  const dispatch = useDispatch();
+  const onRemoveHandler = async () => {
+    await removeFiles(meta.file_id as number);
+    dispatch(dispatch(removeFileRedux(meta)));
+  };
   useEffect(() => {
     setIsImage(isImagePath(path));
   }, [path]);
+
+  const openFileHandler = () => {
+    openFile(meta);
+  };
   return (
     <div
       className={cn('cursor-pointer overflow-hidden', className)}
       {...props}
-      onDoubleClick={onClick}
+      onDoubleClick={openFileHandler}
     >
       <ContextMenu>
         <ContextMenuTrigger>
@@ -77,11 +89,18 @@ export function FileViewTile({
           </div>
         </ContextMenuTrigger>
         <ContextMenuContent className="w-40">
-          <ContextMenuItem onClick={onClick}>Open</ContextMenuItem>
+          <ContextMenuItem onClick={openFileHandler}>Open</ContextMenuItem>
           <ContextMenuSeparator />
           <ContextMenuItem>Open Folder</ContextMenuItem>
           <ContextMenuSeparator />
           <ContextMenuItem>Details</ContextMenuItem>
+          <ContextMenuSeparator />
+          <ContextMenuItem onClick={onRemoveHandler}>
+            <span className="pr-1">
+              <TrashIcon />
+            </span>
+            Remove
+          </ContextMenuItem>
         </ContextMenuContent>
       </ContextMenu>
       <div className="w-full px-2">

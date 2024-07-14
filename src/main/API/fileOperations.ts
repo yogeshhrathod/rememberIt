@@ -1,16 +1,16 @@
+/* eslint-disable camelcase */
 import { ipcMain, shell } from 'electron';
-import { addFiles } from '../Database/Models/files';
-import { FILE_DROPPED, OPEN_FILE } from '../../constants/index';
-import { IFileTag, IFile } from '../../schema';
+import { deleteFile } from '../Database/Models/files';
+import { OPEN_FILE, REMOVE_FILE } from '../../constants/index';
+import { IFile } from '../../schema';
 
 export default function initFileOperations() {
-  ipcMain.on(OPEN_FILE, async (event, arg: IFile) => {
-    shell.openPath(arg.file_path);
-    event.reply(OPEN_FILE, 'Done');
+  ipcMain.handle(OPEN_FILE, async (event, file: IFile) => {
+    shell.openPath(file.file_path);
   });
 
-  ipcMain.on(FILE_DROPPED, async (event, files: IFile[], tags: IFileTag[]) => {
-    const { count, error } = await addFiles(files, tags);
-    event.reply(FILE_DROPPED, { files, count, error });
+  ipcMain.handle(REMOVE_FILE, async (_, file_id) => {
+    const deletedData = await deleteFile(file_id);
+    return deletedData;
   });
 }

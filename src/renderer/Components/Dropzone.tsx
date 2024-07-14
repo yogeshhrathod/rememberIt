@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { IFile, IFileTag } from '../../schema';
 import './dropbox.css';
 import { DialogTagSelector } from './composite/tagSelector';
-import { FILE_DROPPED } from '../../constants';
-
-const { ipcRenderer } = window.electron;
+import { addFiles } from '../API/helper';
 
 const getFormatFromMime = (mime: string) => {
   if (mime && mime.length === 0) return '';
@@ -17,9 +15,9 @@ const FileDropzone: React.FC<{}> = () => {
   const [droppedFiles, setDroppedFiles] = useState<IFile[]>([]);
   let dragCounter = 0;
 
-  const onTagAddHandler = (tags: IFileTag) => {
+  const onTagAddHandler = (tags: IFileTag[]) => {
     if (droppedFiles.length) {
-      ipcRenderer.sendMessage(FILE_DROPPED, droppedFiles, tags);
+      addFiles(droppedFiles, tags);
       setDroppedFiles([]);
     }
   };

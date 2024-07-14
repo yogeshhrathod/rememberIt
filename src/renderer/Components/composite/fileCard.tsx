@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { File } from 'lucide-react';
+import { TrashIcon } from '@radix-ui/react-icons';
 import { cn } from '../../lib/utils';
 import {
   ContextMenu,
@@ -12,6 +13,7 @@ import {
 } from '../ui/context-menu';
 import { IFile } from '../../../schema';
 import { getFriendlyFileSize } from '../../util';
+import { removeFiles } from '../../API/helper';
 
 interface IFileViewTile extends React.HTMLAttributes<HTMLDivElement> {
   width: number;
@@ -47,6 +49,9 @@ export function FileViewTile({
   ...props
 }: IFileViewTile) {
   const [isImage, setIsImage] = useState(true);
+  const onRemoveHandler = async () => {
+    await removeFiles(meta.file_id as number);
+  };
   useEffect(() => {
     setIsImage(isImagePath(path));
   }, [path]);
@@ -82,6 +87,13 @@ export function FileViewTile({
           <ContextMenuItem>Open Folder</ContextMenuItem>
           <ContextMenuSeparator />
           <ContextMenuItem>Details</ContextMenuItem>
+          <ContextMenuSeparator />
+          <ContextMenuItem onClick={onRemoveHandler}>
+            <span className="pr-1">
+              <TrashIcon />
+            </span>
+            Remove
+          </ContextMenuItem>
         </ContextMenuContent>
       </ContextMenu>
       <div className="w-full px-2">

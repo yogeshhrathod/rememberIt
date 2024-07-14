@@ -3,7 +3,7 @@
 /* eslint-disable no-await-in-loop */
 import { IFile, IFileTag } from '../../../schema';
 import db from '../db';
-import { find } from '../dbHelper';
+import { deleteRecord, find } from '../dbHelper';
 
 const FILE_TABLE = 'Files';
 
@@ -37,4 +37,13 @@ export async function addFiles(files: IFile[], tags: IFileTag[]) {
 }
 export async function getFiles() {
   return find(FILE_TABLE);
+}
+
+export async function deleteFile(file_id: number) {
+  try {
+    const count = await deleteRecord(FILE_TABLE, { file_id });
+    return { count, error: null };
+  } catch (error) {
+    return { count: 0, error };
+  }
 }

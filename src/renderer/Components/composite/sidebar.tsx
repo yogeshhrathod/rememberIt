@@ -1,8 +1,15 @@
 /* eslint-disable promise/always-return */
 /* eslint-disable promise/catch-or-return */
 /* eslint-disable import/prefer-default-export */
-import { BriefcaseBusiness, MicVocal, Notebook } from 'lucide-react';
+import { MicVocal } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
+import {
+  ContextMenu,
+  ContextMenuTrigger,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuSeparator,
+} from '../ui/context-menu';
 import { cn } from '../../lib/utils';
 import { Button } from '../ui/button';
 import { getTags } from '../../API';
@@ -66,24 +73,33 @@ export function Sidebar({ className }: React.HTMLAttributes<HTMLDivElement>) {
           <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
             Tags
           </h2>
-          <div className="space-y-1">
-            {tags?.map((tag) => (
-              <Button
-                variant="ghost"
-                className="w-full justify-start"
-                key={tag.name}
-              >
-                {/* icon should use from tag.icon */}
-                <MicVocal
-                  size={20}
-                  strokeWidth={1}
-                  absoluteStrokeWidth
-                  className="mr-2"
-                />
-                {tag.name}
-              </Button>
-            ))}
-          </div>
+          <ContextMenu>
+            <ContextMenuTrigger>
+              <div className="space-y-1">
+                {tags?.map((tag) => (
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start"
+                    key={tag.name}
+                  >
+                    {/* icon should use from tag.icon */}
+                    <MicVocal
+                      size={20}
+                      strokeWidth={1}
+                      absoluteStrokeWidth
+                      className="mr-2"
+                    />
+                    {tag.name}
+                  </Button>
+                ))}
+              </div>
+            </ContextMenuTrigger>
+            <ContextMenuContent className="w-40">
+              <ContextMenuItem>Edit</ContextMenuItem>
+              <ContextMenuSeparator />
+              <ContextMenuItem>Delete</ContextMenuItem>
+            </ContextMenuContent>
+          </ContextMenu>
         </div>
       </div>
     </div>

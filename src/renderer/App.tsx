@@ -6,6 +6,7 @@ import { IFile } from '../schema';
 import FileDropzone from './Components/Dropzone';
 import MainPage from './pages/mainPage';
 import { fetchFilesRedux } from './redux/filesSlice'; // Import UnknownAction type
+import { Toaster } from './Components/ui/sonner';
 
 function Main() {
   const files = useSelector(
@@ -20,6 +21,7 @@ function Main() {
     <div>
       <FileDropzone />
       <MainPage files={files} />
+      <Toaster />
     </div>
   );
 }

@@ -6,6 +6,7 @@ import { addFiles } from '../API/helper';
 import { fetchFilesRedux } from '../redux/filesSlice';
 // eslint-disable-next-line import/order
 import { useDispatch } from 'react-redux';
+import { toast } from 'sonner';
 
 const getFormatFromMime = (mime: string) => {
   if (mime && mime.length === 0) return '';
@@ -23,6 +24,7 @@ const FileDropzone: React.FC<{}> = () => {
     if (droppedFiles.length) {
       addFiles(droppedFiles, tags);
       dispatch(fetchFilesRedux() as any);
+      toast.success(`${droppedFiles.length} Files added successfully`);
       setDroppedFiles([]);
     }
   };

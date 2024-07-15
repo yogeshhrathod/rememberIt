@@ -1,6 +1,12 @@
 /* eslint-disable camelcase */
 import { IFile, IFileTag } from '../../schema';
-import { ADD_FILES, GET_FILES, OPEN_FILE, REMOVE_FILE } from '../../constants';
+import {
+  ADD_FILES,
+  GET_FILES,
+  GET_TAGS,
+  OPEN_FILE,
+  REMOVE_FILE,
+} from '../../constants';
 
 // eslint-disable-next-line import/prefer-default-export
 export async function getFiles() {
@@ -24,4 +30,11 @@ export async function removeFiles(file_id: number) {
 
 export async function openFile(file: IFile) {
   window.electron.ipcRenderer.invoke(OPEN_FILE, file);
+}
+
+export async function getTags() {
+  const { tags, err }: { tags: IFileTag[]; err: any } =
+    await window.electron.ipcRenderer.invoke(GET_TAGS);
+  if (err) return [];
+  return tags;
 }

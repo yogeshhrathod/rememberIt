@@ -78,7 +78,7 @@ export function FileViewTile({
                 width={width}
                 height={height}
                 className={cn(
-                  'object-cover transition-all hover:scale-105 aspect-square p-2 rounded-2xl',
+                  'object-cover transition-all hover:scale-105 aspect-square p-2 rounded-2xl pointer-events-none',
                 )}
               />
             ) : (

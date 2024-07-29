@@ -1,15 +1,17 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { IFile } from '../../schema';
-import { getFiles } from '../API/helper';
+import { IFile, IFileTag } from '../../schema';
+import { getFiles, getTags } from '../API/helper';
 
 interface FilesState {
   value: IFile[];
+  tags: IFileTag[];
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
 }
 
 const initialState: FilesState = {
   value: [],
+  tags: [],
   status: 'idle',
   error: null,
 };
@@ -19,7 +21,22 @@ export const fetchFilesRedux = createAsyncThunk(
   'files/fetchFiles',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await getFiles(); // Assuming getFiles() returns a promise of IFile[]
+      const response = await getFiles();
+      return response;
+    } catch (err) {
+      return rejectWithValue(
+        err instanceof Error ? err.message : 'An unknown error occurred',
+      );
+    }
+  },
+);
+
+// Define the thunk for fetching tags
+export const fetchTagsRedux = createAsyncThunk(
+  'tags/fetchTags',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await getTags();
       return response;
     } catch (err) {
       return rejectWithValue(
@@ -47,6 +64,12 @@ export const filesSlice = createSlice({
         (file) => file.file_id !== action.payload.file_id,
       );
     },
+    setTagsRedux: (state, action: PayloadAction<IFileTag[]>) => {
+      state.tags = action.payload;
+    },
+    addTagRedux: (state, action: PayloadAction<IFileTag>) => {
+      state.tags.push(action.payload);
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -60,11 +83,27 @@ export const filesSlice = createSlice({
       .addCase(fetchFilesRedux.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload as string;
+      })
+      .addCase(fetchTagsRedux.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchTagsRedux.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.tags = action.payload;
+      })
+      .addCase(fetchTagsRedux.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload as string;
       });
   },
 });
 
-export const { addFilesRedux, removeFileRedux, setFilesRedux } =
-  filesSlice.actions;
+export const {
+  addFilesRedux,
+  removeFileRedux,
+  setFilesRedux,
+  setTagsRedux,
+  addTagRedux,
+} = filesSlice.actions;
 
 export default filesSlice.reducer;

@@ -11,9 +11,11 @@ import {
 import { Input } from '../ui/input'; // Adjust the import path as necessary
 import { Label } from '../ui/label';
 import { Button } from '../ui/button';
+import { useDispatch, useSelector } from 'react-redux';
 import { ScrollableSelect } from './scrollableSelect';
 import { addTag } from '../../API';
 import { IFileTag } from '../../../schema';
+import { addTagRedux } from '../../redux/filesSlice';
 
 interface TagInputComponentProps {
   isOpen: boolean;
@@ -31,6 +33,7 @@ const TagInputComponent = ({
   // create two states for the tag name and icon
   const [tagName, setTagName] = useState(tagNameValue);
   const [tagIcon, setTagIcon] = useState(tagIconValue);
+  const dispatch = useDispatch();
 
   const closeModalWrapper = () => {
     setTagName('');
@@ -48,6 +51,7 @@ const TagInputComponent = ({
         weight: 1,
       };
       await addTag(tagData);
+      dispatch(addTagRedux(tagData) as any);
       closeModalWrapper();
     }
   };

@@ -4,6 +4,8 @@
 import { MicVocal, PlusSquare } from 'lucide-react';
 import * as Icon from 'lucide-react';
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import {
   ContextMenu,
   ContextMenuTrigger,
@@ -16,6 +18,7 @@ import { Button } from '../ui/button';
 import { getTags } from '../../API';
 import { IFileTag } from '../../../schema';
 import TagInputComponent from './addEditTag';
+import { fetchTagsRedux, addTagRedux } from '../../redux/filesSlice';
 
 // interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
 //   playlists: Playlist[];
@@ -23,7 +26,11 @@ import TagInputComponent from './addEditTag';
 
 export function Sidebar({ className }: React.HTMLAttributes<HTMLDivElement>) {
   // create tags state
-  const [tags, setTags] = useState<IFileTag[]>([]);
+  // const [tags, setTags] = useState<IFileTag[]>([]);
+  const tags = useSelector(
+    (state: { files: { tags: IFileTag[] } }) => state.files.tags,
+  );
+  const dispatch = useDispatch();
 
   const [isOpenTagInputComponent, setIsOpenTagInputComponent] =
     React.useState(false);
@@ -32,10 +39,9 @@ export function Sidebar({ className }: React.HTMLAttributes<HTMLDivElement>) {
   };
 
   useEffect(() => {
-    getTags().then((dbTags: IFileTag[]) => {
-      setTags(dbTags);
-    });
-  }, []);
+    dispatch(fetchTagsRedux() as any);
+  }, [dispatch]);
+
   return (
     <div
       className={cn('pb-12 h-max relative', className)}

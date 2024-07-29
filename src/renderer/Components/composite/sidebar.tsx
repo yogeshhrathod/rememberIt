@@ -2,6 +2,7 @@
 /* eslint-disable promise/catch-or-return */
 /* eslint-disable import/prefer-default-export */
 import { MicVocal, PlusSquare } from 'lucide-react';
+import * as Icon from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import {
   ContextMenu,
@@ -89,13 +90,21 @@ export function Sidebar({ className }: React.HTMLAttributes<HTMLDivElement>) {
                     className="w-full justify-start"
                     key={tag.name}
                   >
-                    {/* icon should use from tag.icon */}
-                    <MicVocal
-                      size={20}
-                      strokeWidth={1}
-                      absoluteStrokeWidth
-                      className="mr-2"
-                    />
+                    {Icon[tag.icon] ? (
+                      React.createElement(Icon[tag.icon], {
+                        size: 20,
+                        strokeWidth: 1,
+                        absoluteStrokeWidth: true,
+                        className: 'mr-2',
+                      })
+                    ) : (
+                      <MicVocal
+                        size={20}
+                        strokeWidth={1}
+                        absoluteStrokeWidth
+                        className="mr-2"
+                      />
+                    )}
                     {tag.name}
                   </Button>
                 ))}
@@ -116,6 +125,8 @@ export function Sidebar({ className }: React.HTMLAttributes<HTMLDivElement>) {
       </div>
       <TagInputComponent
         isOpen={isOpenTagInputComponent}
+        tagIconValue=""
+        tagNameValue=""
         closeModal={() => setIsOpenTagInputComponent(false)}
       />
     </div>

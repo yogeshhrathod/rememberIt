@@ -15,15 +15,28 @@ import { ScrollableSelect } from './scrollableSelect';
 import { addTag } from '../../API';
 import { IFileTag } from '../../../schema';
 
+interface TagInputComponentProps {
+  isOpen: boolean;
+  closeModal: () => void;
+  tagNameValue: string; // Add the prop type for tagNameValue
+  tagIconValue: string;
+}
+
 const TagInputComponent = ({
   isOpen,
   closeModal,
   tagNameValue,
   tagIconValue,
-}) => {
+}: TagInputComponentProps) => {
   // create two states for the tag name and icon
   const [tagName, setTagName] = useState(tagNameValue);
   const [tagIcon, setTagIcon] = useState(tagIconValue);
+
+  const closeModalWrapper = () => {
+    setTagName('');
+    setTagIcon('');
+    closeModal();
+  };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -35,7 +48,7 @@ const TagInputComponent = ({
         weight: 1,
       };
       await addTag(tagData);
-      closeModal();
+      closeModalWrapper();
     }
   };
 
@@ -77,7 +90,7 @@ const TagInputComponent = ({
   }, [iconList, tagIcon]);
 
   return (
-    <Dialog open={isOpen} onOpenChange={closeModal}>
+    <Dialog open={isOpen} onOpenChange={closeModalWrapper}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add/Edit Tag</DialogTitle>

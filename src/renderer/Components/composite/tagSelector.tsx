@@ -9,8 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '../ui/dialog';
-// import MultiSelect from './selectScrollable';
-import { MultiSelect } from './selectScrollable';
+import { MultiSelect } from './multiSelect';
 import { IFileTag } from '../../../schema';
 
 interface DialogTagSelectorProps {

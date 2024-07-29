@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { toast } from 'sonner';
 import { IFile, IFileTag } from '../../schema';
 import './dropbox.css';
 import { DialogTagSelector } from './composite/tagSelector';
-import { addFiles } from '../API/helper';
+import { addTag } from '../API/helper';
 import { fetchFilesRedux } from '../redux/filesSlice';
 // eslint-disable-next-line import/order
 import { useDispatch } from 'react-redux';
-import { toast } from 'sonner';
 
 const getFormatFromMime = (mime: string) => {
   if (mime && mime.length === 0) return '';
@@ -22,7 +22,7 @@ const FileDropzone: React.FC<{}> = () => {
 
   const onTagAddHandler = (tags: IFileTag[]) => {
     if (droppedFiles.length) {
-      addFiles(droppedFiles, tags);
+      addTag(droppedFiles, tags);
       dispatch(fetchFilesRedux() as any);
       toast.success(`${droppedFiles.length} Files added successfully`);
       setDroppedFiles([]);

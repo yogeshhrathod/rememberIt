@@ -29,8 +29,9 @@ export const File = z.object({
 // Define a Zod schema for linking files and tags (optional weight)
 export const FileTag = z.object({
   name: z.string().trim().min(1),
-  tag_id: z.number(),
+  tag_id: z.number().optional(), // Optional since it's auto-incrementing in the database
   weight: z.number().int().nonnegative().optional().default(1), // Optional weight with default 1 and non-negative
+  icon: z.string().trim().min(1),
 });
 
 export type IFile = z.infer<typeof File>;

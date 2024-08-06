@@ -3,9 +3,8 @@
 /* eslint-disable import/prefer-default-export */
 import { MicVocal, PlusSquare } from 'lucide-react';
 import * as Icon from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
 import {
   ContextMenu,
   ContextMenuTrigger,
@@ -15,10 +14,11 @@ import {
 } from '../ui/context-menu';
 import { cn } from '../../lib/utils';
 import { Button } from '../ui/button';
-import { getTags } from '../../API';
 import { IFileTag } from '../../../schema';
 import TagInputComponent from './addEditTag';
-import { fetchTagsRedux, addTagRedux } from '../../redux/filesSlice';
+import { fetchTagsRedux, removeTagRedux } from '../../redux/filesSlice';
+import { ScrollArea } from '../ui/scroll-area';
+import { removeTag } from '../../API';
 
 // interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
 //   playlists: Playlist[];
@@ -42,86 +42,62 @@ export function Sidebar({ className }: React.HTMLAttributes<HTMLDivElement>) {
     dispatch(fetchTagsRedux() as any);
   }, [dispatch]);
 
+  const handleDeleteTag = (tag: IFileTag) => {
+    removeTag(tag.tag_id as number);
+    dispatch(removeTagRedux(tag));
+  };
   return (
     <div
       className={cn('pb-12 h-max relative', className)}
       style={{ height: 'calc(100vh - 37px)' }}
     >
       <div className="space-y-4 py-4 max-w[300px]">
-        {/* currently no categories */}
-        {/* <div className="px-3 py-2">
-          <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
-            Categories
-          </h2>
-          <div className="space-y-1">
-            <Button variant="secondary" className="w-full justify-start">
-              <BriefcaseBusiness
-                size={20}
-                strokeWidth={1}
-                absoluteStrokeWidth
-                className="mr-2"
-              />
-              Work
-            </Button>
-            <Button variant="ghost" className="w-full justify-start">
-              <Notebook
-                size={20}
-                strokeWidth={1}
-                absoluteStrokeWidth
-                className="mr-2"
-              />
-              Personal
-            </Button>
-            <Button variant="ghost" className="w-full justify-start">
-              <MicVocal
-                size={20}
-                strokeWidth={1}
-                absoluteStrokeWidth
-                className="mr-2"
-              />
-              Hobby
-            </Button>
-          </div>
-        </div> */}
         <div className="px-3 py-2">
           <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
             Tags
           </h2>
-          <ContextMenu>
-            <ContextMenuTrigger>
-              <div className="space-y-1">
-                {tags?.map((tag) => (
-                  <Button
-                    variant="ghost"
-                    className="w-full justify-start"
-                    key={tag.name}
-                  >
-                    {Icon[tag.icon] ? (
-                      React.createElement(Icon[tag.icon], {
-                        size: 20,
-                        strokeWidth: 1,
-                        absoluteStrokeWidth: true,
-                        className: 'mr-2',
-                      })
-                    ) : (
-                      <MicVocal
-                        size={20}
-                        strokeWidth={1}
-                        absoluteStrokeWidth
-                        className="mr-2"
-                      />
-                    )}
-                    {tag.name}
-                  </Button>
-                ))}
-              </div>
-            </ContextMenuTrigger>
-            <ContextMenuContent className="w-40">
-              <ContextMenuItem>Edit</ContextMenuItem>
-              <ContextMenuSeparator />
-              <ContextMenuItem>Delete</ContextMenuItem>
-            </ContextMenuContent>
-          </ContextMenu>
+          <ScrollArea>
+            <div
+              className="space-y-1"
+              style={{ height: 'calc(100vh - 155px)' }}
+            >
+              {tags?.map((tag) => (
+                <ContextMenu>
+                  <ContextMenuTrigger>
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start"
+                      key={tag.name}
+                    >
+                      {Icon[tag.icon] ? (
+                        React.createElement(Icon[tag.icon], {
+                          size: 20,
+                          strokeWidth: 1,
+                          absoluteStrokeWidth: true,
+                          className: 'mr-2',
+                        })
+                      ) : (
+                        <MicVocal
+                          size={20}
+                          strokeWidth={1}
+                          absoluteStrokeWidth
+                          className="mr-2"
+                        />
+                      )}
+                      {tag.name}
+                    </Button>
+                  </ContextMenuTrigger>
+                  <ContextMenuContent className="w-40">
+                    <ContextMenuItem>Edit</ContextMenuItem>
+                    <ContextMenuSeparator />
+                    <ContextMenuItem onClick={() => handleDeleteTag(tag)}>
+                      Delete
+                    </ContextMenuItem>
+                  </ContextMenuContent>
+                </ContextMenu>
+              ))}
+            </div>
+          </ScrollArea>
         </div>
       </div>
       <div className="flex items-center justify-center bottom-0 absolute w-full mb-4">

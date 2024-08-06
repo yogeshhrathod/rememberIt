@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IFile, IFileTag } from '../../schema';
-import { getFiles, getTags } from '../API/helper';
+import { getFiles, getTags, removeTag } from '../API/helper';
 
 interface FilesState {
   value: IFile[];
@@ -70,6 +70,11 @@ export const filesSlice = createSlice({
     addTagRedux: (state, action: PayloadAction<IFileTag>) => {
       state.tags.push(action.payload);
     },
+    removeTagRedux: (state, action: PayloadAction<IFileTag>) => {
+      state.tags = state.tags.filter(
+        (tag) => tag.tag_id !== action.payload.tag_id,
+      );
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -104,6 +109,7 @@ export const {
   setFilesRedux,
   setTagsRedux,
   addTagRedux,
+  removeTagRedux,
 } = filesSlice.actions;
 
 export default filesSlice.reducer;

@@ -3,7 +3,7 @@ import { toast } from 'sonner';
 import { IFile, IFileTag } from '../../schema';
 import './dropbox.css';
 import { DialogTagSelector } from './composite/tagSelector';
-import { addTag } from '../API/helper';
+import { addFiles } from '../API/helper';
 import { fetchFilesRedux } from '../redux/filesSlice';
 // eslint-disable-next-line import/order
 import { useDispatch } from 'react-redux';
@@ -22,7 +22,7 @@ const FileDropzone: React.FC<{}> = () => {
 
   const onTagAddHandler = (tags: IFileTag[]) => {
     if (droppedFiles.length) {
-      addTag(droppedFiles, tags);
+      addFiles(droppedFiles, tags);
       dispatch(fetchFilesRedux() as any);
       toast.success(`${droppedFiles.length} Files added successfully`);
       setDroppedFiles([]);

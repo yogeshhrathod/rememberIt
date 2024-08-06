@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { Button } from '../ui/button';
 import {
   Dialog,
@@ -23,6 +24,9 @@ export function DialogTagSelector({
   onDialogClose,
 }: DialogTagSelectorProps) {
   const [selectedTags, setSelectedTags] = React.useState<IFileTag[]>([]);
+  const tags = useSelector(
+    (state: { files: { tags: IFileTag[] } }) => state.files.tags,
+  );
 
   return (
     <Dialog defaultOpen onOpenChange={onDialogClose}>
@@ -36,10 +40,7 @@ export function DialogTagSelector({
         <div className="flex items-center space-x-2">
           <div className="grid flex-1 gap-2">
             <MultiSelect
-              tags={[
-                { tag_id: 1, name: 'Important', weight: 0 },
-                { tag_id: 2, name: 'Urgent', weight: 0 },
-              ]}
+              tags={tags}
               onSelect={(newSelectedTags) => setSelectedTags(newSelectedTags)}
             />
           </div>

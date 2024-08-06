@@ -7,6 +7,7 @@ import {
   GET_TAGS,
   OPEN_FILE,
   REMOVE_FILE,
+  REMOVE_TAG,
 } from '../../constants';
 
 // eslint-disable-next-line import/prefer-default-export
@@ -43,6 +44,13 @@ export async function getTags() {
 export async function addTag(tag: IFileTag) {
   const { count, err }: { count: number; err: any } =
     await window.electron.ipcRenderer.invoke(ADD_TAG, tag);
+  if (err) return 0;
+  return count;
+}
+
+export async function removeTag(tag_id: number) {
+  const { count, err }: { count: number; err: any } =
+    await window.electron.ipcRenderer.invoke(REMOVE_TAG, { tag_id });
   if (err) return 0;
   return count;
 }

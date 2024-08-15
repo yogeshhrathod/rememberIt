@@ -6,6 +6,7 @@ import {
   EDIT_TAG,
   GET_FILES,
   GET_TAGS,
+  OPEN_DIR,
   OPEN_FILE,
   REMOVE_FILE,
   REMOVE_TAG,
@@ -33,6 +34,10 @@ export async function removeFiles(file_id: number) {
 
 export async function openFile(file: IFile) {
   window.electron.ipcRenderer.invoke(OPEN_FILE, file);
+}
+
+export async function openDir(file: IFile) {
+  window.electron.ipcRenderer.invoke(OPEN_DIR, file);
 }
 
 export async function getTags() {

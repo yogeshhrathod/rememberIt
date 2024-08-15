@@ -15,7 +15,7 @@ import {
 } from '../ui/context-menu';
 import { IFile } from '../../../schema';
 import { getFriendlyFileSize } from '../../util';
-import { openFile, removeFiles } from '../../API/helper';
+import { openDir, openFile, removeFiles } from '../../API/helper';
 import { removeFileRedux } from '../../redux/filesSlice';
 
 interface IFileViewTile extends React.HTMLAttributes<HTMLDivElement> {
@@ -57,6 +57,7 @@ export function FileViewTile({
     dispatch(dispatch(removeFileRedux(meta)));
     toast.success('File removed');
   };
+
   useEffect(() => {
     setIsImage(isImagePath(path));
   }, [path]);
@@ -64,6 +65,11 @@ export function FileViewTile({
   const openFileHandler = () => {
     openFile(meta);
     toast.success('File opened');
+  };
+
+  const openDirHandler = () => {
+    openDir(meta);
+    toast.success('Opening Folder');
   };
 
   return (
@@ -95,7 +101,9 @@ export function FileViewTile({
         <ContextMenuContent className="w-40">
           <ContextMenuItem onClick={openFileHandler}>Open</ContextMenuItem>
           <ContextMenuSeparator />
-          <ContextMenuItem>Open Folder</ContextMenuItem>
+          <ContextMenuItem onClick={openDirHandler}>
+            Open Folder
+          </ContextMenuItem>
           <ContextMenuSeparator />
           <ContextMenuItem>Details</ContextMenuItem>
           <ContextMenuSeparator />

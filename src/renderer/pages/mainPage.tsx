@@ -12,6 +12,7 @@ import { FileViewTile } from '../Components/composite/fileCard';
 import { Menu } from '../Components/composite/menu';
 import { Sidebar } from '../Components/composite/sidebar';
 import { IFile } from '../../schema';
+import FileView from '../Components/composite/fileView';
 
 export default function MainPage({ files }: { files: IFile[] }) {
   return (
@@ -52,19 +53,7 @@ export default function MainPage({ files }: { files: IFile[] }) {
                           className="flex flex-wrap pb-4 "
                           style={{ maxHeight: 'calc(100vh - 200px)' }}
                         >
-                          {files.map((file, index) => {
-                            return (
-                              <FileViewTile
-                                className="flex flex-col items-center w-[100px]"
-                                name={file.file_name}
-                                path={file.file_path}
-                                width={100}
-                                height={100}
-                                meta={file}
-                                key={index}
-                              />
-                            );
-                          })}
+                          <FileView files={files} />
                         </div>
                         <ScrollBar orientation="vertical" />
                       </ScrollArea>

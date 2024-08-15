@@ -36,3 +36,10 @@ export const FileTag = z.object({
 
 export type IFile = z.infer<typeof File>;
 export type IFileTag = z.infer<typeof FileTag>;
+export type ISearchParams = {
+  tag?: number;
+  search?: string;
+  order?: 'ASC' | 'DESC';
+  orderBy?: string;
+  limit?: number;
+};

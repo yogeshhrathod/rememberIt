@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { IFile, IFileTag } from '../../schema';
-import { getFiles, getTags, removeTag } from '../API/helper';
+import { IFile, IFileTag, ISearchParams } from '../../schema';
+import { getFiles, getTags } from '../API/helper';
 
 interface FilesState {
   value: IFile[];
@@ -19,9 +19,9 @@ const initialState: FilesState = {
 // Define the thunk for fetching files
 export const fetchFilesRedux = createAsyncThunk(
   'files/fetchFiles',
-  async (_, { rejectWithValue }) => {
+  async (searchParam: ISearchParams, { rejectWithValue }) => {
     try {
-      const response = await getFiles();
+      const response = await getFiles(searchParam);
       return response;
     } catch (err) {
       return rejectWithValue(

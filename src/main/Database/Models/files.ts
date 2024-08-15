@@ -1,9 +1,9 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-await-in-loop */
-import { IFile, IFileTag } from '../../../schema';
+import { IFile, IFileTag, ISearchParams } from '../../../schema';
 import db from '../db';
-import { deleteRecord, find } from '../dbHelper';
+import { deleteRecord, find, getFilesWithParams } from '../dbHelper';
 
 const FILE_TABLE = 'Files';
 
@@ -35,10 +35,9 @@ export async function addFiles(files: IFile[], tags: IFileTag[]) {
     return { count: 0, error };
   }
 }
-export async function getFiles() {
-  return find(FILE_TABLE);
+export async function getFiles(searchParam: ISearchParams = {}) {
+  return getFilesWithParams(searchParam);
 }
-
 export async function deleteFile(file_id: number) {
   try {
     const count = await deleteRecord(FILE_TABLE, { file_id });

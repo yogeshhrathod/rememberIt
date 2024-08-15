@@ -1,7 +1,7 @@
 /* eslint-disable promise/always-return */
 /* eslint-disable promise/catch-or-return */
 /* eslint-disable import/prefer-default-export */
-import { MicVocal, PlusSquare } from 'lucide-react';
+import { LucideTornado, MicVocal, PlusSquare } from 'lucide-react';
 import * as Icon from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,16 +16,18 @@ import { cn } from '../../lib/utils';
 import { Button } from '../ui/button';
 import { IFileTag } from '../../../schema';
 import TagInputComponent from './addEditTag';
-import { fetchTagsRedux, removeTagRedux } from '../../redux/filesSlice';
+import {
+  fetchFilesRedux,
+  fetchTagsRedux,
+  removeTagRedux,
+} from '../../redux/filesSlice';
 import { ScrollArea } from '../ui/scroll-area';
 import { removeTag } from '../../API';
 
-// interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
-//   playlists: Playlist[];
-// }
-
 export function Sidebar({ className }: React.HTMLAttributes<HTMLDivElement>) {
-  const [selectedTag, setselectedTag] = useState<IFileTag>({
+  const [selectedTag, setSelectedTag] = useState<IFileTag | null>();
+
+  const [editSelectedTag, setEditingSelectedTag] = useState<IFileTag>({
     name: '',
     icon: '',
     tag_id: 0,
@@ -52,14 +54,24 @@ export function Sidebar({ className }: React.HTMLAttributes<HTMLDivElement>) {
     dispatch(removeTagRedux(tag));
   };
 
+  const handleAllTagSelected = () => {
+    setSelectedTag(null);
+    dispatch(fetchFilesRedux({}) as any);
+  };
+
+  const handleTagSelected = (tag: IFileTag) => {
+    setSelectedTag(tag);
+    dispatch(fetchFilesRedux({ tag: tag?.tag_id }) as any);
+  };
+
   const handleEditTag = (tag: IFileTag) => {
-    setselectedTag({ ...tag });
+    setEditingSelectedTag({ ...tag });
     setIsOpenTagInputComponent(true);
   };
 
   const tagInputCloseHandler = () => {
     setIsOpenTagInputComponent(false);
-    setselectedTag({
+    setEditingSelectedTag({
       name: '',
       icon: '',
       tag_id: 0,
@@ -82,13 +94,30 @@ export function Sidebar({ className }: React.HTMLAttributes<HTMLDivElement>) {
               className="space-y-1"
               style={{ height: 'calc(100vh - 155px)' }}
             >
+              <Button
+                className="w-full justify-start"
+                variant={selectedTag ? 'ghost' : 'default'}
+                onClick={handleAllTagSelected}
+              >
+                <LucideTornado
+                  color="orange"
+                  size={20}
+                  strokeWidth={2}
+                  absoluteStrokeWidth
+                  className="mr-2"
+                />
+                All
+              </Button>
               {tags?.map((tag) => (
                 <ContextMenu key={`ContextMenu_${tag.tag_id}`}>
                   <ContextMenuTrigger>
                     <Button
-                      variant="ghost"
+                      variant={
+                        selectedTag?.tag_id === tag.tag_id ? 'default' : 'ghost'
+                      }
                       className="w-full justify-start"
                       key={tag.name}
+                      onClick={() => handleTagSelected(tag)}
                     >
                       {Icon[tag.icon] ? (
                         React.createElement(Icon[tag.icon], {
@@ -131,7 +160,7 @@ export function Sidebar({ className }: React.HTMLAttributes<HTMLDivElement>) {
       {isOpenTagInputComponent && (
         <TagInputComponent
           isOpen
-          tag={selectedTag}
+          tag={editSelectedTag}
           closeModal={() => tagInputCloseHandler()}
         />
       )}

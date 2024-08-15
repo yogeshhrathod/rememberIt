@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import { IFile, IFileTag } from '../../schema';
+import { IFile, IFileTag, ISearchParams } from '../../schema';
 import {
   ADD_FILES,
   ADD_TAG,
@@ -13,18 +13,20 @@ import {
 } from '../../constants';
 
 // eslint-disable-next-line import/prefer-default-export
-export async function getFiles() {
+export async function getFiles(searchParam: ISearchParams) {
   const { files, err }: { files: IFile[]; err: any } =
-    await window.electron.ipcRenderer.invoke(GET_FILES);
+    await window.electron.ipcRenderer.invoke(GET_FILES, searchParam);
   if (err) return [];
   return files;
 }
+
 export async function addFiles(files: IFile[], tags: IFileTag[]) {
   const { count, err }: { count: number; err: any } =
     await window.electron.ipcRenderer.invoke(ADD_FILES, files, tags);
   if (err) return 0;
   return count;
 }
+
 export async function removeFiles(file_id: number) {
   const { count, err }: { count: number; err: any } =
     await window.electron.ipcRenderer.invoke(REMOVE_FILE, file_id);

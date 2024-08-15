@@ -13,6 +13,7 @@ export const EDIT_TAG = 'edit-tag';
 
 // file system operations
 export const OPEN_FILE = 'open-file';
+export const OPEN_DIR = 'open-directory';
 
 export const FILE_DROPPED = 'file-dropped';
 export type FILE_DROPPED_PARAMS = {

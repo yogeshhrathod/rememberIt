@@ -20,12 +20,8 @@ import { fetchTagsRedux, removeTagRedux } from '../../redux/filesSlice';
 import { ScrollArea } from '../ui/scroll-area';
 import { removeTag } from '../../API';
 
-// interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
-//   playlists: Playlist[];
-// }
-
 export function Sidebar({ className }: React.HTMLAttributes<HTMLDivElement>) {
-  const [selectedTag, setselectedTag] = useState<IFileTag>({
+  const [editSelectedTag, setEditingSelectedTag] = useState<IFileTag>({
     name: '',
     icon: '',
     tag_id: 0,
@@ -53,13 +49,13 @@ export function Sidebar({ className }: React.HTMLAttributes<HTMLDivElement>) {
   };
 
   const handleEditTag = (tag: IFileTag) => {
-    setselectedTag({ ...tag });
+    setEditingSelectedTag({ ...tag });
     setIsOpenTagInputComponent(true);
   };
 
   const tagInputCloseHandler = () => {
     setIsOpenTagInputComponent(false);
-    setselectedTag({
+    setEditingSelectedTag({
       name: '',
       icon: '',
       tag_id: 0,
@@ -131,7 +127,7 @@ export function Sidebar({ className }: React.HTMLAttributes<HTMLDivElement>) {
       {isOpenTagInputComponent && (
         <TagInputComponent
           isOpen
-          tag={selectedTag}
+          tag={editSelectedTag}
           closeModal={() => tagInputCloseHandler()}
         />
       )}

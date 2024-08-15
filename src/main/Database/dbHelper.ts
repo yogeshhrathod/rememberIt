@@ -10,6 +10,8 @@ interface BaseRecord {
  * Base class for representing database tables (optional for type safety).
  */
 export abstract class DbRecord implements BaseRecord {
+  idColumn?: string;
+
   id?: number;
 }
 
@@ -46,28 +48,18 @@ export async function create<T extends {}>(
   return result.lastInsertRowid;
 }
 
-/**
- * Updates a row in a table by its ID.
- *
- * @param db The database connection instance.
- * @param tableName The name of the table to update.
- * @param id The ID of the row to update.
- * @param data The object containing updated data for the row.
- * @param options Optional configuration for the update operation.
- *   - fields: An array of strings specifying which fields to update (defaults to all).
- * @returns The number of rows affected (should be 1 for a successful update).
- */
-export async function update<T extends DbRecord>(
+export async function update<T extends Object>(
   tableName: string,
+  idColumn: string,
   id: number,
-  data: Partial<T>, // Use Partial<T> to allow optional data updates
+  data: T,
   options?: { fields?: string[] },
 ): Promise<number> {
   const fieldsToUpdate = options?.fields ?? Object.keys(data);
   const updateStmt = db.prepare(
     `UPDATE ${tableName} SET ${fieldsToUpdate
       .map((key) => `${key} = ?`)
-      .join(', ')} WHERE id = ?`,
+      .join(', ')} WHERE ${idColumn} = ?`,
   );
   const valuesToUpdate = [
     ...Object.values(data).filter((_, index) =>

@@ -3,6 +3,7 @@ import { IFile, IFileTag } from '../../schema';
 import {
   ADD_FILES,
   ADD_TAG,
+  EDIT_TAG,
   GET_FILES,
   GET_TAGS,
   OPEN_FILE,
@@ -44,6 +45,13 @@ export async function getTags() {
 export async function addTag(tag: IFileTag) {
   const { count, err }: { count: number; err: any } =
     await window.electron.ipcRenderer.invoke(ADD_TAG, tag);
+  if (err) return 0;
+  return count;
+}
+
+export async function editTag(tag: IFileTag) {
+  const { count, err }: { count: number; err: any } =
+    await window.electron.ipcRenderer.invoke(EDIT_TAG, tag);
   if (err) return 0;
   return count;
 }

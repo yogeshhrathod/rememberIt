@@ -70,6 +70,11 @@ export const filesSlice = createSlice({
     addTagRedux: (state, action: PayloadAction<IFileTag>) => {
       state.tags.push(action.payload);
     },
+    editTagRedux: (state, action: PayloadAction<IFileTag>) => {
+      state.tags = state.tags.map((tag) =>
+        tag.tag_id === action.payload.tag_id ? { tag, ...action.payload } : tag,
+      );
+    },
     removeTagRedux: (state, action: PayloadAction<IFileTag>) => {
       state.tags = state.tags.filter(
         (tag) => tag.tag_id !== action.payload.tag_id,
@@ -109,6 +114,7 @@ export const {
   setFilesRedux,
   setTagsRedux,
   addTagRedux,
+  editTagRedux,
   removeTagRedux,
 } = filesSlice.actions;
 

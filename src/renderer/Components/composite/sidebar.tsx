@@ -3,7 +3,7 @@
 /* eslint-disable import/prefer-default-export */
 import { MicVocal, PlusSquare } from 'lucide-react';
 import * as Icon from 'lucide-react';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   ContextMenu,
@@ -25,15 +25,20 @@ import { removeTag } from '../../API';
 // }
 
 export function Sidebar({ className }: React.HTMLAttributes<HTMLDivElement>) {
-  // create tags state
-  // const [tags, setTags] = useState<IFileTag[]>([]);
+  const [selectedTag, setselectedTag] = useState<IFileTag>({
+    name: '',
+    icon: '',
+    tag_id: 0,
+    weight: 0,
+  });
+
   const tags = useSelector(
     (state: { files: { tags: IFileTag[] } }) => state.files.tags,
   );
   const dispatch = useDispatch();
 
-  const [isOpenTagInputComponent, setIsOpenTagInputComponent] =
-    React.useState(false);
+  const [isOpenTagInputComponent, setIsOpenTagInputComponent] = useState(false);
+
   const handleTagInputComponent = () => {
     setIsOpenTagInputComponent(!isOpenTagInputComponent);
   };
@@ -46,6 +51,22 @@ export function Sidebar({ className }: React.HTMLAttributes<HTMLDivElement>) {
     removeTag(tag.tag_id as number);
     dispatch(removeTagRedux(tag));
   };
+
+  const handleEditTag = (tag: IFileTag) => {
+    setselectedTag({ ...tag });
+    setIsOpenTagInputComponent(true);
+  };
+
+  const tagInputCloseHandler = () => {
+    setIsOpenTagInputComponent(false);
+    setselectedTag({
+      name: '',
+      icon: '',
+      tag_id: 0,
+      weight: 0,
+    });
+  };
+
   return (
     <div
       className={cn('pb-12 h-max relative', className)}
@@ -62,7 +83,7 @@ export function Sidebar({ className }: React.HTMLAttributes<HTMLDivElement>) {
               style={{ height: 'calc(100vh - 155px)' }}
             >
               {tags?.map((tag) => (
-                <ContextMenu>
+                <ContextMenu key={`ContextMenu_${tag.tag_id}`}>
                   <ContextMenuTrigger>
                     <Button
                       variant="ghost"
@@ -88,7 +109,9 @@ export function Sidebar({ className }: React.HTMLAttributes<HTMLDivElement>) {
                     </Button>
                   </ContextMenuTrigger>
                   <ContextMenuContent className="w-40">
-                    <ContextMenuItem>Edit</ContextMenuItem>
+                    <ContextMenuItem onClick={() => handleEditTag(tag)}>
+                      Edit
+                    </ContextMenuItem>
                     <ContextMenuSeparator />
                     <ContextMenuItem onClick={() => handleDeleteTag(tag)}>
                       Delete
@@ -105,12 +128,13 @@ export function Sidebar({ className }: React.HTMLAttributes<HTMLDivElement>) {
           <PlusSquare /> <span className="px-2">Create Tag</span>
         </Button>
       </div>
-      <TagInputComponent
-        isOpen={isOpenTagInputComponent}
-        tagIconValue=""
-        tagNameValue=""
-        closeModal={() => setIsOpenTagInputComponent(false)}
-      />
+      {isOpenTagInputComponent && (
+        <TagInputComponent
+          isOpen
+          tag={selectedTag}
+          closeModal={() => tagInputCloseHandler()}
+        />
+      )}
     </div>
   );
 }

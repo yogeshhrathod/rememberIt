@@ -1,5 +1,6 @@
 import React, { ReactElement, useEffect, useMemo, useState } from 'react';
 import * as Icons from 'lucide-react'; // Adjust the import path as necessary
+import { useDispatch } from 'react-redux';
 import {
   Dialog,
   DialogContent,
@@ -11,54 +12,29 @@ import {
 import { Input } from '../ui/input'; // Adjust the import path as necessary
 import { Label } from '../ui/label';
 import { Button } from '../ui/button';
-import { useDispatch, useSelector } from 'react-redux';
 import { ScrollableSelect } from './scrollableSelect';
-import { addTag } from '../../API';
+import { addTag, editTag } from '../../API';
 import { IFileTag } from '../../../schema';
-import { addTagRedux } from '../../redux/filesSlice';
+import { addTagRedux, editTagRedux } from '../../redux/filesSlice';
 
 interface TagInputComponentProps {
   isOpen: boolean;
   closeModal: () => void;
-  tagNameValue: string; // Add the prop type for tagNameValue
-  tagIconValue: string;
+  tag: IFileTag;
 }
 
 const TagInputComponent = ({
   isOpen,
   closeModal,
-  tagNameValue,
-  tagIconValue,
+  tag,
 }: TagInputComponentProps) => {
-  // create two states for the tag name and icon
-  const [tagName, setTagName] = useState(tagNameValue);
-  const [tagIcon, setTagIcon] = useState(tagIconValue);
-  const dispatch = useDispatch();
-
-  const closeModalWrapper = () => {
-    setTagName('');
-    setTagIcon('');
-    closeModal();
-  };
-
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-    if (tagName !== '' && tagIcon !== '') {
-      // add tag into the database
-      const tagData: IFileTag = {
-        name: tagName,
-        icon: tagIcon,
-        weight: 1,
-      };
-      await addTag(tagData);
-      dispatch(addTagRedux(tagData) as any);
-      closeModalWrapper();
-    }
-  };
-
+  const [tagName, setTagName] = useState(tag.name || '');
+  const [tagIcon, setTagIcon] = useState(tag.icon || '');
   const [iconList, setIconList] = useState<
     { value: string; label: ReactElement<any, any> }[]
   >([]);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchIcons = async () => {
@@ -80,6 +56,46 @@ const TagInputComponent = ({
 
     fetchIcons();
   }, []);
+
+  const closeModalWrapper = () => {
+    setTagName('');
+    setTagIcon('');
+    closeModal();
+  };
+
+  const addTagHandler = async () => {
+    const tagData: IFileTag = {
+      name: tagName,
+      icon: tagIcon,
+      weight: 1,
+    };
+    await addTag(tagData);
+    dispatch(addTagRedux(tagData) as any);
+    closeModalWrapper();
+  };
+
+  const editTagHandler = async () => {
+    const tagData: IFileTag = {
+      name: tagName,
+      icon: tagIcon,
+      tag_id: tag.tag_id as number,
+      weight: tag.weight,
+    };
+    await editTag(tagData);
+    dispatch(editTagRedux(tagData) as any);
+    closeModalWrapper();
+  };
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (tagName !== '' && tagIcon !== '') {
+      if (tag.tag_id) {
+        editTagHandler();
+      } else {
+        addTagHandler();
+      }
+    }
+  };
 
   const ScrollableSelectMemo = useMemo(() => {
     return (
@@ -118,7 +134,7 @@ const TagInputComponent = ({
           </div>
           <br />
           <DialogFooter>
-            <Button>Save Tag</Button>
+            <Button> {tag.tag_id ? 'Save Changes' : 'Add Tag'}</Button>
           </DialogFooter>
         </form>
       </DialogContent>

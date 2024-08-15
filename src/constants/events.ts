@@ -6,7 +6,10 @@ export const GET_FILES = 'get-files';
 export const REMOVE_FILE = 'remove-file';
 
 // tags db operations
+export const GET_TAGS = 'get-tags';
 export const ADD_TAG = 'add-tag';
+export const REMOVE_TAG = 'remove-tag';
+export const EDIT_TAG = 'edit-tag';
 
 // file system operations
 export const OPEN_FILE = 'open-file';

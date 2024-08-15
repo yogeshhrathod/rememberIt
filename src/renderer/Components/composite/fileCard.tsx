@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { File } from 'lucide-react';
 import { TrashIcon } from '@radix-ui/react-icons';
 import { useDispatch } from 'react-redux';
+import { toast } from 'sonner';
 import { cn } from '../../lib/utils';
 import {
   ContextMenu,
@@ -54,6 +55,7 @@ export function FileViewTile({
   const onRemoveHandler = async () => {
     await removeFiles(meta.file_id as number);
     dispatch(dispatch(removeFileRedux(meta)));
+    toast.success('File removed');
   };
   useEffect(() => {
     setIsImage(isImagePath(path));
@@ -61,7 +63,9 @@ export function FileViewTile({
 
   const openFileHandler = () => {
     openFile(meta);
+    toast.success('File opened');
   };
+
   return (
     <div
       className={cn('cursor-pointer overflow-hidden', className)}
@@ -78,7 +82,7 @@ export function FileViewTile({
                 width={width}
                 height={height}
                 className={cn(
-                  'object-cover transition-all hover:scale-105 aspect-square p-2 rounded-2xl',
+                  'object-cover transition-all hover:scale-105 aspect-square p-2 rounded-2xl pointer-events-none',
                 )}
               />
             ) : (

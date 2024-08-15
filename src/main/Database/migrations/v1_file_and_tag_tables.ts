@@ -24,6 +24,7 @@ export default {
       name TEXT NOT NULL UNIQUE,
       weight INTEGER DEFAULT 1,
       icon TEXT,
+      color TEXT,
       created DATETIME NOT NULL DEFAULT (datetime('now', 'localtime'))
       );
     `);

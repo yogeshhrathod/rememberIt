@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { toast } from 'sonner';
 import { IFile, IFileTag } from '../../schema';
 import './dropbox.css';
 import { DialogTagSelector } from './composite/tagSelector';
@@ -23,6 +24,7 @@ const FileDropzone: React.FC<{}> = () => {
     if (droppedFiles.length) {
       addFiles(droppedFiles, tags);
       dispatch(fetchFilesRedux() as any);
+      toast.success(`${droppedFiles.length} Files added successfully`);
       setDroppedFiles([]);
     }
   };

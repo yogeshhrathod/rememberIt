@@ -7,7 +7,7 @@ import {
 } from '@radix-ui/react-icons';
 import * as SelectPrimitive from '@radix-ui/react-select';
 
-import { cn } from 'src/renderer/lib/utils';
+import { cn } from '../../lib/utils';
 
 const Select = SelectPrimitive.Root;
 
@@ -93,6 +93,7 @@ const SelectContent = React.forwardRef<
           position === 'popper' &&
             'h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]',
         )}
+        style={{ width: '100px' }}
       >
         {children}
       </SelectPrimitive.Viewport>

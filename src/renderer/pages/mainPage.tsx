@@ -8,7 +8,6 @@ import {
   TabsTrigger,
 } from '../Components/ui/tabs';
 
-import { FileViewTile } from '../Components/composite/fileCard';
 import { Menu } from '../Components/composite/menu';
 import { Sidebar } from '../Components/composite/sidebar';
 import { IFile } from '../../schema';

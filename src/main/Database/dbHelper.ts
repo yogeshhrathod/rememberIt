@@ -1,3 +1,4 @@
+import { ISearchParams } from '../../schema';
 import db from './db';
 
 // Helper functions for interacting with the database
@@ -180,4 +181,35 @@ export async function deleteRecord<T extends DbRecord>(
   const stmt = db.prepare(sql);
   const result = await stmt.run(values);
   return result.changes; // Number of rows affected (should be 1 for a successful delete)
+}
+
+export async function getFilesWithParams(
+  searchParams: ISearchParams = {},
+): Promise<File[]> {
+  const { tag, search, order, orderBy, limit } = searchParams;
+  let sql = `SELECT f.* FROM FileTags ft INNER JOIN Files f ON ft.file_id = f.file_id`;
+  const values: any[] = [];
+
+  if (tag) {
+    sql += ` WHERE ft.tag_id = ?`;
+    values.push(tag);
+  }
+
+  if (search) {
+    sql = `SELECT f.* FROM FileSearch fs INNER JOIN Files f ON fs.file_id = f.file_id WHERE fs MATCH ?`;
+    values.push(search);
+  }
+
+  if (order && orderBy && ['ASC', 'DESC'].includes(order)) {
+    sql += ` ORDER BY ${orderBy} ${order}`;
+  }
+
+  if (limit) {
+    sql += ` LIMIT ?`;
+    values.push(limit);
+  }
+
+  const stmt = db.prepare(sql);
+  const result = await stmt.all(...values);
+  return result;
 }

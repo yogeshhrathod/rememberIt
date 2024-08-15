@@ -8,7 +8,7 @@ import {
   REMOVE_TAG,
 } from '../../constants/index';
 import { addFiles, getFiles } from '../Database/Models/files';
-import { IFile, IFileTag } from '../../schema';
+import { IFile, IFileTag, ISearchParams } from '../../schema';
 import { addTag, getTags, editTag, removeTag } from '../Database/Models/tags';
 
 /**
@@ -24,9 +24,9 @@ export default function initSqlOperations() {
     }
   });
 
-  ipcMain.handle(GET_FILES, async () => {
+  ipcMain.handle(GET_FILES, async (_, searchParam: ISearchParams) => {
     try {
-      const files = await getFiles();
+      const files = await getFiles(searchParam);
       return { files, err: null };
     } catch (error) {
       return { files: [], err: error };

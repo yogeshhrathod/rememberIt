@@ -208,7 +208,6 @@ const MultiSelectorInput = forwardRef<
       // onBlur={() => setOpen(false)}
       onFocus={() => setOpen(true)}
       onClick={() => {
-        console.log('test');
         setActiveIndex(-1);
       }}
       className={cn(
@@ -281,7 +280,7 @@ const MultiSelectorItem = forwardRef<
         setInputValue('');
       }}
       onClick={() => {
-        console.log(value);
+        // console.log(value);
       }}
       className={cn(
         'rounded-md cursor-pointer px-2 py-1 transition-colors flex justify-between ',

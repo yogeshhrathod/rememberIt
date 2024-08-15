@@ -36,7 +36,7 @@ No Updates
 
 ## Maintainers
 
--   [Yogesh Rathod](https://github.com/yogeshhrathod)
+- [Yogesh Rathod](https://github.com/yogeshhrathod)
 
 ## License
 

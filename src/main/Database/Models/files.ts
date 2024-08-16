@@ -3,7 +3,7 @@
 /* eslint-disable no-await-in-loop */
 import { IFile, IFileTag, ISearchParams } from '../../../schema';
 import db from '../db';
-import { deleteRecord, find, getFilesWithParams } from '../dbHelper';
+import { deleteRecord, getFilesWithParams } from '../dbHelper';
 
 const FILE_TABLE = 'Files';
 

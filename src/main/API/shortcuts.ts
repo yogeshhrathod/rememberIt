@@ -2,7 +2,7 @@ import { app, globalShortcut } from 'electron';
 
 export const shortcutsConfig = [
   {
-    keyCombination: 'CommandOrControl+Q',
+    keyCombination: 'CommandOrControl+W',
     action: () => {
       app.quit();
     },

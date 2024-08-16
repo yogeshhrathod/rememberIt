@@ -23,10 +23,14 @@ export default function MainPage({ files }: { files: IFile[] }) {
             <Sidebar className="hidden lg:block" />
             <div className="col-span-3 lg:col-span-4 lg:border-l">
               <div className="h-full px-4 py-6 lg:px-8">
-                <Tabs defaultValue="recents" className="h-full space-y-1">
+                <Tabs defaultValue="files" className="h-full space-y-1">
                   <div className="space-between flex items-center">
                     <TabsList>
-                      <TabsTrigger value="recents" className="relative">
+                      <TabsTrigger
+                        value="recents"
+                        disabled
+                        className="relative"
+                      >
                         Recents
                       </TabsTrigger>
                       <TabsTrigger value="files">Files</TabsTrigger>
@@ -42,7 +46,7 @@ export default function MainPage({ files }: { files: IFile[] }) {
                     </TabsList>
                   </div>
                   <TabsContent
-                    value="recents"
+                    value="files"
                     className="border-none p-0 outline-none"
                   >
                     <Separator className="mb-2" />
@@ -59,7 +63,7 @@ export default function MainPage({ files }: { files: IFile[] }) {
                     </div>
                   </TabsContent>
                   <TabsContent
-                    value="files"
+                    value="rencents"
                     className="h-full flex-col border-none p-0 data-[state=active]:flex"
                   >
                     <div className="flex items-center justify-between">

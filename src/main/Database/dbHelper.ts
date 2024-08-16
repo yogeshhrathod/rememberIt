@@ -202,6 +202,8 @@ export async function getFilesWithParams(
 
   if (order && orderBy && ['ASC', 'DESC'].includes(order)) {
     sql += ` ORDER BY ${orderBy} ${order}`;
+  } else {
+    sql += ` ORDER BY f.file_id DESC`;
   }
 
   if (limit) {
@@ -210,6 +212,7 @@ export async function getFilesWithParams(
   }
 
   const stmt = db.prepare(sql);
+
   const result = await stmt.all(...values);
   return result;
 }

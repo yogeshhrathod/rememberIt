@@ -50,10 +50,10 @@ export async function getTags() {
 }
 
 export async function addTag(tag: IFileTag) {
-  const { count, err }: { count: number; err: any } =
+  const { tagId, err }: { tagId: number; err: any } =
     await window.electron.ipcRenderer.invoke(ADD_TAG, tag);
   if (err) return 0;
-  return count;
+  return tagId;
 }
 
 export async function editTag(tag: IFileTag) {

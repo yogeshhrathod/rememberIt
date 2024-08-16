@@ -32,8 +32,8 @@ export default class MenuBuilder {
         : this.buildDefaultTemplate();
 
     const menu = Menu.buildFromTemplate(template);
+    // not setting the menu on the app will make the menu not show on the window
     Menu.setApplicationMenu(null);
-
     return menu;
   }
 
@@ -112,7 +112,7 @@ export default class MenuBuilder {
         },
         {
           label: 'Toggle Full Screen',
-          accelerator: 'Ctrl+Command+F',
+          accelerator: 'Ctrl+Shift+F',
           click: () => {
             this.mainWindow.setFullScreen(!this.mainWindow.isFullScreen());
           },

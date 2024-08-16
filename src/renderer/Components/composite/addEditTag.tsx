@@ -69,8 +69,8 @@ const TagInputComponent = ({
       icon: tagIcon,
       weight: 1,
     };
-    await addTag(tagData);
-    dispatch(addTagRedux(tagData) as any);
+    const tagId = await addTag(tagData);
+    dispatch(addTagRedux({ ...tagData, tag_id: tagId }) as any);
     closeModalWrapper();
   };
 

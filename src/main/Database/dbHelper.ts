@@ -187,7 +187,7 @@ export async function getFilesWithParams(
   searchParams: ISearchParams = {},
 ): Promise<File[]> {
   const { tag, search, order, orderBy, limit } = searchParams;
-  let sql = `SELECT f.* FROM FileTags ft INNER JOIN Files f ON ft.file_id = f.file_id`;
+  let sql = `SELECT DISTINCT f.* FROM FileTags ft INNER JOIN Files f ON ft.file_id = f.file_id`;
   const values: any[] = [];
 
   if (tag) {

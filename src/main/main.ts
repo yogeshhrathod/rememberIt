@@ -80,6 +80,11 @@ const createWindow = async () => {
       nodeIntegration: true, // Enable Node integration
       webSecurity: false, // Disable web security to allow loading local resources
     },
+    titleBarStyle: 'hidden',
+    titleBarOverlay: {
+      color: '#ff000000',
+      height: 36,
+    },
   });
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));

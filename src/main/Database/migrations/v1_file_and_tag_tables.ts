@@ -41,7 +41,8 @@ export default {
     `);
 
     await db.exec(`
-      INSERT INTO Tags (name) VALUES ('Important'), ('Urgent');
+      INSERT INTO Tags (name, icon, weight, color) VALUES ('Personal', 'Briefcase', 1, '#ff6347');
+      INSERT INTO Tags (name, icon, weight, color) VALUES ('Work', 'User', 1, '#87CEEB');
     `);
 
     await db.exec(`

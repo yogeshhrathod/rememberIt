@@ -44,8 +44,8 @@ export default function initSqlOperations() {
 
   ipcMain.handle(ADD_TAG, async (_, tagData: IFileTag) => {
     try {
-      const tags = await addTag(tagData);
-      return { tags, err: null };
+      const tagId = await addTag(tagData);
+      return { tagId, err: null };
     } catch (error) {
       return { files: [], err: error };
     }

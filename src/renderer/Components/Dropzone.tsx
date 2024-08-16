@@ -8,9 +8,12 @@ import { fetchFilesRedux } from '../redux/filesSlice';
 // eslint-disable-next-line import/order
 import { useDispatch } from 'react-redux';
 
-const getFormatFromMime = (mime: string) => {
-  if (mime && mime.length === 0) return '';
-  return mime.split('/')[1];
+const getFormatFromExtention = (fileName: string) => {
+  const nameSplit = fileName.split('.');
+  if (nameSplit.length > 1) {
+    return nameSplit[nameSplit.length - 1];
+  }
+  return '';
 };
 
 const FileDropzone: React.FC<{}> = () => {
@@ -23,7 +26,7 @@ const FileDropzone: React.FC<{}> = () => {
   const onTagAddHandler = (tags: IFileTag[]) => {
     if (droppedFiles.length) {
       addFiles(droppedFiles, tags);
-      dispatch(fetchFilesRedux() as any);
+      dispatch(fetchFilesRedux({}) as any);
       toast.success(`${droppedFiles.length} Files added successfully`);
       setDroppedFiles([]);
     }
@@ -68,7 +71,7 @@ const FileDropzone: React.FC<{}> = () => {
             file_name: element.name,
             file_path: element.path,
             size: element.size,
-            format: getFormatFromMime(element.type),
+            format: getFormatFromExtention(element.name),
           });
         }
         setDroppedFiles(filesDetails);

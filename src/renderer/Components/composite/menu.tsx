@@ -21,7 +21,7 @@ export function Menu() {
         <MenubarTrigger className="font-bold">RememberIt!</MenubarTrigger>
         <MenubarContent>
           <MenubarItem>About</MenubarItem>
-          <MenubarSeparator />
+          {/* <MenubarSeparator />
           <MenubarItem>
             Preferences... <MenubarShortcut>⌘,</MenubarShortcut>
           </MenubarItem>
@@ -32,9 +32,9 @@ export function Menu() {
           <MenubarItem>
             Hide Others... <MenubarShortcut>⇧⌘H</MenubarShortcut>
           </MenubarItem>
-          <MenubarShortcut />
+          <MenubarShortcut /> */}
           <MenubarItem>
-            Quit App <MenubarShortcut>⌘Q</MenubarShortcut>
+            Quit App <MenubarShortcut>⌘ Q</MenubarShortcut>
           </MenubarItem>
         </MenubarContent>
       </MenubarMenu>

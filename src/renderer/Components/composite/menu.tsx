@@ -20,7 +20,7 @@ export function Menu() {
       <MenubarMenu>
         <MenubarTrigger className="font-bold">RememberIt!</MenubarTrigger>
         <MenubarContent>
-          <MenubarItem>About</MenubarItem>
+          {/* <MenubarItem>About</MenubarItem> */}
           {/* <MenubarSeparator />
           <MenubarItem>
             Preferences... <MenubarShortcut>⌘,</MenubarShortcut>

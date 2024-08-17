@@ -23,7 +23,7 @@ export const File = z.object({
   format: z.string().trim().min(1),
   description: z.string().optional(),
   extras: z.string().optional(),
-  // Add other relevant file attributes here
+  notes: z.string().optional(),
 });
 
 // Define a Zod schema for linking files and tags (optional weight)

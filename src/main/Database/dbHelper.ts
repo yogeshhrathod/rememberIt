@@ -186,30 +186,44 @@ export async function deleteRecord<T extends DbRecord>(
 export async function getFilesWithParams(
   searchParams: ISearchParams = {},
 ): Promise<File[]> {
-  const { tag, search, order, orderBy, limit } = searchParams;
-  let sql = `SELECT DISTINCT f.* FROM FileTags ft INNER JOIN Files f ON ft.file_id = f.file_id`;
-  const values: any[] = [];
+  try {
+    const { tag, search, order, orderBy, limit } = searchParams;
+    let sql = `SELECT DISTINCT f.* FROM FileTags ft INNER JOIN Files f ON ft.file_id = f.file_id`;
+    const values: any[] = [];
 
-  if (tag) {
-    sql += ` WHERE ft.tag_id = ?`;
-    values.push(tag);
+    if (tag) {
+      sql += ` WHERE ft.tag_id = ?`;
+      values.push(tag);
+    }
+
+    if (search) {
+      sql = ` SELECT DISTINCT f.* FROM Files f
+    INNER JOIN FileTags ft ON f.file_id = ft.file_id
+    WHERE f.file_name LIKE ?`;
+
+      values.push(`%${search}%`);
+
+      if (tag) {
+        sql += ` AND ft.tag_id = ?`;
+        values.push(tag);
+      }
+    }
+
+    if (order && orderBy && ['ASC', 'DESC'].includes(order)) {
+      sql += ` ORDER BY ${orderBy} ${order}`;
+    } else {
+      sql += ` ORDER BY f.file_id DESC`;
+    }
+
+    if (limit) {
+      sql += ` LIMIT ?`;
+      values.push(limit);
+    }
+
+    const stmt = db.prepare(sql);
+    const result = await stmt.all(...values);
+    return result;
+  } catch (error) {
+    return [];
   }
-
-  if (search) {
-    sql = `SELECT f.* FROM FileSearch fs INNER JOIN Files f ON fs.file_id = f.file_id WHERE fs MATCH ?`;
-    values.push(search);
-  }
-
-  if (order && orderBy && ['ASC', 'DESC'].includes(order)) {
-    sql += ` ORDER BY ${orderBy} ${order}`;
-  }
-
-  if (limit) {
-    sql += ` LIMIT ?`;
-    values.push(limit);
-  }
-
-  const stmt = db.prepare(sql);
-  const result = await stmt.all(...values);
-  return result;
 }

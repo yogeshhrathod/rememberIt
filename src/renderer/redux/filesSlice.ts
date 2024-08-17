@@ -21,6 +21,8 @@ export const fetchFilesRedux = createAsyncThunk(
   'files/fetchFiles',
   async (searchParam: ISearchParams, { rejectWithValue }) => {
     try {
+      console.log(searchParam);
+
       const response = await getFiles(searchParam);
       return response;
     } catch (err) {

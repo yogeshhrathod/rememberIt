@@ -14,6 +14,7 @@ export default {
       size INTEGER NOT NULL,
       format TEXT NOT NULL,
       description TEXT,
+      notes TEXT,
       extras TEXT
       );
     `);
@@ -46,19 +47,35 @@ export default {
     `);
 
     await db.exec(`
-      CREATE VIRTUAL TABLE FilesFTS_Path USING FTS5(file_path);
+      CREATE VIRTUAL TABLE FilesFTS USING FTS5(file_id, description, notes, extras);
+    `);
+
+    // Create Triggers
+    await db.exec(`
+      CREATE TRIGGER files_ai AFTER INSERT ON Files BEGIN
+        INSERT INTO FilesFTS(file_id, description, notes, extras)
+        VALUES (new.file_id, new.description, new.notes, new.extras);
+      END;
     `);
 
     await db.exec(`
-      CREATE VIRTUAL TABLE FilesFTS USING FTS5(name);
+      CREATE TRIGGER files_ad AFTER DELETE ON Files BEGIN
+        DELETE FROM FilesFTS WHERE file_id = old.file_id;
+      END;
+    `);
+
+    await db.exec(`
+      CREATE TRIGGER files_au AFTER UPDATE ON Files BEGIN
+        DELETE FROM FilesFTS WHERE file_id = old.file_id;
+        INSERT INTO FilesFTS(file_id, description, notes, extras)
+        VALUES (new.file_id, new.description, new.notes, new.extras);
+      END;
     `);
   },
   // Optional down function for rollback functionality (if needed)
   down: async (db: Database): Promise<void> => {
     // Drop FTS5 Virtual Tables (optional, in reverse order)
     await db.exec('DROP VIRTUAL TABLE FilesFTS');
-    await db.exec('DROP VIRTUAL TABLE FilesFTS_Path');
-    await db.exec('DROP VIRTUAL TABLE FilesFTS_Name');
 
     // Drop Tables (in reverse order)
     await db.exec('DROP TABLE FileTags');

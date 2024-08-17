@@ -34,7 +34,7 @@ export function Menu() {
           </MenubarItem>
           <MenubarShortcut /> */}
           <MenubarItem>
-            Quit App <MenubarShortcut>Crtl+W</MenubarShortcut>
+            Quit App <MenubarShortcut>Crtl+Q</MenubarShortcut>
           </MenubarItem>
         </MenubarContent>
       </MenubarMenu>

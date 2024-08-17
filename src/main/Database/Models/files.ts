@@ -13,13 +13,17 @@ export async function addFiles(files: IFile[], tags: IFileTag[]) {
       for (const file of files) {
         const filId = db
           .prepare(
-            `INSERT INTO ${FILE_TABLE} (file_name, file_path, size, format) VALUES (?, ?, ?, ?)`,
+            `INSERT INTO ${FILE_TABLE} (file_name, file_path, size, format, description,notes,extras)
+            VALUES (?, ?, ?, ?, ?, ?, ?)`,
           )
           .run(
             file.file_name,
             file.file_path,
             file.size,
             file.format,
+            file.description || '',
+            file.notes || '',
+            file.extras || '',
           ).lastInsertRowid;
 
         for (const tag of tags) {
@@ -36,7 +40,12 @@ export async function addFiles(files: IFile[], tags: IFileTag[]) {
   }
 }
 export async function getFiles(searchParam: ISearchParams = {}) {
-  return getFilesWithParams(searchParam);
+  try {
+    return getFilesWithParams(searchParam);
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
 }
 export async function deleteFile(file_id: number) {
   try {
